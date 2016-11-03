@@ -1,0 +1,29 @@
+{
+  "name": "consumerAPI",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
+  "dependencies": {
+    "connect-redis": "3.0.2",
+    "include-all": "^1.0.0",
+    "lodash": "^4.16.4",
+    "rc": "1.0.1",
+    "sails": "~0.12.8",
+    "sails-auth": "^2.1.3",
+    "sails-disk": "~0.10.9",
+    "sails-mongo": "^0.12.1",
+    "sails-permissions": "^2.2.0"
+  },
+  "scripts": {
+    "debug": "node debug app.js",
+    "start": "node app.js"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/matt/consumerAPI.git"
+  },
+  "author": "matt",
+  "license": ""
+}
