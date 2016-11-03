@@ -1,3 +1,3 @@
-# consumerAPI
+# hansya-consumer-api
 
 a [Sails](http://sailsjs.org) application
