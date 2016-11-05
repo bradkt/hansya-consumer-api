@@ -1,3 +1,6 @@
 # hansya-consumer-api
 
-a [Sails](http://sailsjs.org) application
+##Swagger
+When installed with dev-dependencies, you can access the swagger definitions at /docs
+
+ 

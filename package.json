@@ -25,5 +25,9 @@
     "url": "git://github.com/matt/consumerAPI.git"
   },
   "author": "matt",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "sails-swagger": "^0.5.1",
+    "swagger-ui": "^2.2.6"
+  }
 }

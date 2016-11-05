@@ -37,6 +37,10 @@ module.exports.policies = {
 
    UserController:{
      'create': [ 'passport' ],
+   },
+
+   SwaggerController:{
+     '*': ['passport']
    }
 
   /***************************************************************************

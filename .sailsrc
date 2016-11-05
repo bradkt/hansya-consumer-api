@@ -3,8 +3,5 @@
     "modules": {
       "permissions-api": "sails-permissions/generator"
     }
-  },
-  "hooks": {
-    "grunt": false
   }
 }
