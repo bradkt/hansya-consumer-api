@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "bluebird": "^3.4.6",
     "connect-redis": "3.0.2",
     "include-all": "^1.0.0",
     "lodash": "^4.16.4",
