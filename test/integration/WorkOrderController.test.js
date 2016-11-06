@@ -27,12 +27,22 @@ describe('WorkOrderController', function () {
                     .get('/workOrder')
                     .expect(200)
                     .then(function (res) {
+                        console.log(res.body)
                         var wo = res.body[0]
                         return request
                             .get('/workOrder/' + wo.id)
                             .then(function (workOrder) {
                                 return expect(workOrder.body).to.deep.equal(wo)
                             })
+                    })
+            })
+
+            it('should not let me return a workorder for another user', function () {
+                return request
+                    .get('/workOrder/3')
+                    .expect(404)
+                    .then(function (workOrder) {
+                        return expect(workOrder.body).to.deep.equal({})
                     })
             })
 
@@ -60,7 +70,7 @@ describe('WorkOrderController', function () {
                             .then(function (res) {
                                 return WorkOrder.find({ id: workOrder.id })
                                     .then(function (wo) {
-                                        return expect(wo[0].paid).to.equal(true)
+                                        return (expect(wo[0].paid).to.equal(true) && expect(wo[0].paymentID).to.equal('42 baker'))
                                     })
                             })
                     })
@@ -188,7 +198,7 @@ describe('WorkOrderController', function () {
                 })
             })
 
-            
+
         })
     })
 });

@@ -69,7 +69,12 @@ module.exports.bootstrap = function (done) {
       username: 'registered',
       password: 'registered1234'
     },
-        {
+    {
+      email: 'registered2@example.com',
+      username: 'registered2',
+      password: 'registered21234'
+    },
+    {
       email: 'associate@example.com',
       username: 'associate',
       password: 'associate1234'
@@ -216,7 +221,32 @@ module.exports.bootstrap = function (done) {
         WorkOrder.create({
           id: 2,
           requestedDate: new Date(),
-          keywords: ['OTHER','Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+          keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+          user: user[0],
+          product: product[0],
+          paid: false
+        }).exec(function (err, workorder) {
+          console.log(err)
+          workOrderData.forEach(function (dataPoint) {
+            WorkOrderData.create({
+              workOrder: workorder,
+              data: dataPoint
+            }).exec(function (err) {
+              err ? console.log(err) : null
+            })
+          })
+        })
+      })
+    });
+  })
+
+    ok = ok.then(function () {
+    return User.find({ username: 'registered2' }).exec(function (err, user) {
+      Product.find({}).exec(function (error, product) {
+        WorkOrder.create({
+          id: 3,
+          requestedDate: new Date(),
+          keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
           user: user[0],
           product: product[0],
           paid: false
@@ -239,21 +269,22 @@ module.exports.bootstrap = function (done) {
   //permissions
   ////////////////////////////////////////////////////////////////////////////////////////
 
-  ok = ok.then(function(){
+  ok = ok.then(function () {
     return PermissionService.grant({
       role: 'registered',
       model: 'workorder',
       action: 'update',
-      criteria: {blacklist: ['keywords', 'assignedUser','acceptedDate','requestedDate','completedDate','user','product']}
+      criteria: { blacklist: ['keywords', 'assignedUser', 'acceptedDate', 'requestedDate', 'completedDate', 'user', 'product'] }
     })
   })
 
-  ok = ok.then(function(){
+  ok = ok.then(function () {
     return PermissionService.grant({
       role: 'registered',
       model: 'workorder',
       action: 'read',
-      criteria: {blacklist: ['paymentID']}
+      criteria: { 
+        blacklist: ['paymentID'] }
     })
   })
 
