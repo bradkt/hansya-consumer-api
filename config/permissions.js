@@ -5,9 +5,6 @@ var _super = require('sails-permissions/config/permissions');
 
 _.merge(exports, _super);
 _.merge(exports, {
-    grants:{
-      registered: []
-    }
   // Extend with custom logic here by adding additional fields, methods, etc.
 
 });

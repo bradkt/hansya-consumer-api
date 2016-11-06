@@ -18,7 +18,8 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/**/*.test.js"
   },
   "main": "app.js",
   "repository": {
@@ -28,7 +29,11 @@
   "author": "matt",
   "license": "",
   "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2",
     "sails-swagger": "^0.5.1",
+    "supertest": "^2.0.1",
+    "supertest-as-promised": "^4.0.2",
     "swagger-ui": "^2.2.6"
   }
 }

@@ -69,7 +69,7 @@ module.exports.bootstrap = function (done) {
       username: 'registered',
       password: 'registered1234'
     },
-    {
+        {
       email: 'associate@example.com',
       username: 'associate',
       password: 'associate1234'
@@ -149,17 +149,13 @@ module.exports.bootstrap = function (done) {
       "u_name": "JonathanIppoli1"
     }]
 
-  var ok = Promise.map(users, function (user) {
-    return User.register(user)
-  }, { concurrency: 1 });
+  ok = Promise.resolve();
 
-  ok = ok.spread(function (u1, u2) {
-    return PermissionService.grant({
-      action: 'read',
-      model: 'user',
-      role: 'registered'
+  ok = ok.then(function () {
+    return Promise.map(users, function (user) {
+      return User.register(user)
     });
-  });
+  })
 
   ok = ok.then(function () {
     return PermissionService.createRole({
@@ -177,27 +173,30 @@ module.exports.bootstrap = function (done) {
   });
 
   ok = ok.then(function () {
-    Promise.map(products, function (product) {
+    return Promise.map(products, function (product) {
       return Product.create(product)
-    }, { concurrency: 1 })
+    });
   })
 
   ok = ok.then(function () {
-    Promise.map(industries, function (industry) {
+    return Promise.map(industries, function (industry) {
       return Industry.create(industry)
     }, { concurrency: 1 })
   })
 
   ok = ok.then(function () {
-    return User.find({username: 'registered'}).exec(function (err, user) {
+    return User.find({ username: 'registered' }).exec(function (err, user) {
       Product.find({}).exec(function (error, product) {
         WorkOrder.create({
+          id: 1,
           requestedDate: new Date(),
           keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
           user: user[0],
           product: product[0],
-          paid: false
+          paid: true,
+          paymentID: 'abcd12'
         }).exec(function (err, workorder) {
+          console.log(err)
           workOrderData.forEach(function (dataPoint) {
             WorkOrderData.create({
               workOrder: workorder,
@@ -209,6 +208,53 @@ module.exports.bootstrap = function (done) {
         })
       })
     });
+  })
+
+  ok = ok.then(function () {
+    return User.find({ username: 'registered' }).exec(function (err, user) {
+      Product.find({}).exec(function (error, product) {
+        WorkOrder.create({
+          id: 2,
+          requestedDate: new Date(),
+          keywords: ['OTHER','Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+          user: user[0],
+          product: product[0],
+          paid: false
+        }).exec(function (err, workorder) {
+          console.log(err)
+          workOrderData.forEach(function (dataPoint) {
+            WorkOrderData.create({
+              workOrder: workorder,
+              data: dataPoint
+            }).exec(function (err) {
+              err ? console.log(err) : null
+            })
+          })
+        })
+      })
+    });
+  })
+
+  ////////////////////////////////////////////////////////////////////////////////////////
+  //permissions
+  ////////////////////////////////////////////////////////////////////////////////////////
+
+  ok = ok.then(function(){
+    return PermissionService.grant({
+      role: 'registered',
+      model: 'workorder',
+      action: 'update',
+      criteria: {blacklist: ['keywords', 'assignedUser','acceptedDate','requestedDate','completedDate','user','product']}
+    })
+  })
+
+  ok = ok.then(function(){
+    return PermissionService.grant({
+      role: 'registered',
+      model: 'workorder',
+      action: 'read',
+      criteria: {blacklist: ['paymentID']}
+    })
   })
 
   ok.then(function () {
