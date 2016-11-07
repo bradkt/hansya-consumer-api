@@ -1,5 +1,8 @@
 var expect = require('chai').expect
 
+var async = require('asyncawait/async')
+var await = require('asyncawait/await')
+
 var request
 
 describe('WorkOrderController', function () {
@@ -13,21 +16,25 @@ describe('WorkOrderController', function () {
         })
 
         describe('#get()', function () {
-            it('should return all the work orders for the registered user', function () {
-                return request
-                    .get('/workOrder')
-                    .expect(200)
-                    .then(function (res) {
-                        return expect(res.body.length).to.equal(2)
-                    })
-            })
+            it('should return all the work orders for the registered user', async(function () {
+               var res = await(request.get('/workOrder'))
+               return (expect(res.body.length).to.equal(2) && 
+                       expect(res.statusCode).to.equal(200)) 
+
+                
+                // return request
+                //     .get('/workOrder')
+                //     .expect(200)
+                //     .then(function (res) {
+                //         return expect(res.body.length).to.equal(2)
+                //     })
+            }))
 
             it('should return a single workorder for the registered user', function () {
                 return request
                     .get('/workOrder')
                     .expect(200)
                     .then(function (res) {
-                        console.log(res.body)
                         var wo = res.body[0]
                         return request
                             .get('/workOrder/' + wo.id)
@@ -53,6 +60,12 @@ describe('WorkOrderController', function () {
                     .then(function (res) {
                         return expect(res.body.paymentID).to.equal(undefined)
                     })
+            })
+
+            it('should not let me get all workorders', function(){
+                return request
+                    .get('/workOrder/all')
+                    .expect(403)
             })
         })
 

@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "asyncawait": "^1.0.6",
     "bluebird": "^3.4.6",
     "connect-redis": "3.0.2",
     "include-all": "^1.0.0",
@@ -19,7 +20,7 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "test": "node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/**/*.test.js"
+    "test": "node ./node_modules/mocha/bin/mocha --slow 0 test/bootstrap.test.js test/**/*.test.js"
   },
   "main": "app.js",
   "repository": {

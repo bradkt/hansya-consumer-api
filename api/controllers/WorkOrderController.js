@@ -21,6 +21,12 @@ module.exports = {
                 res.send(results[0])
             }
         })
+    },
+
+    all: function(req, res){
+        WorkOrder.find({}).then(function(results){
+            res.send(results);
+        })
     }
 };
 
