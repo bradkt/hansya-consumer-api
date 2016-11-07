@@ -10,21 +10,21 @@ module.exports = {
             role.active ? userRoles.push(role.name) : null
         })
         return userRoles
+    }),
+
+    hasRole: async(function(userID, roleNames){
+        var hasRole = false
+        var userRoles = await(this.roles(userID))
+        if (!Array.isArray(roleNames)){
+            roleNames = [roleNames]
+        }
+        roleNames.forEach(function(role){
+            if (userRoles.indexOf(role) > -1){
+                hasRole = true // user has an authorized role
+                return //stop at the first appropriate role
+            } 
+        })
+        //no user roles satisified role requirement
+        return hasRole
     })
-
-    /**
-     * @param req
-     */
-    //   buildCallbackNextUrl: function (req) {
-    //     var url = req.query.next;
-    //     var includeToken = req.query.includeToken;
-    //     var accessToken = _.get(req, 'session.tokens.accessToken');
-
-    //     if (includeToken && accessToken) {
-    //       return url + '?access_token=' + accessToken;
-    //     }
-    //     else {
-    //       return url;
-    //     }
-    //   }
 };

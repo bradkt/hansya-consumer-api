@@ -12,4 +12,24 @@ describe('UserService', function () {
             return expect(roles).to.deep.equal(['registered', 'associate'])
         }))
     })
+
+    describe('hasRole', function(){
+        it('should return true when a role matches', async(function(){
+            var user = await(User.findOne({ username: 'associate'}))
+            var hasRole = await(UserService.hasRole(user.id, 'associate'))
+            return expect(hasRole).to.equal(true)
+        }))
+
+        it('should return false when a role does not match', async(function(){
+            var user = await(User.findOne({ username: 'associate'}))
+            var hasRole = await(UserService.hasRole(user.id, 'admin'))
+            return expect(hasRole).to.equal(false)
+        }))
+
+        it('should return true when one role matches and one does not', async(function(){
+            var user = await(User.findOne({ username: 'associate'}))
+            var hasRole = await(UserService.hasRole(user.id, ['admin','associate']))
+            return expect(hasRole).to.equal(true)
+        }))
+    })
 })
