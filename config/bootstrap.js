@@ -223,7 +223,7 @@ module.exports.bootstrap = function (done) {
           console.log(err)
           workOrderData.forEach(function (dataPoint) {
             WorkOrderData.create({
-              workOrder: workorder,
+              campaign: workorder,
               data: dataPoint
             }).exec(function (err) {
               err ? console.log(err) : null
@@ -248,7 +248,7 @@ module.exports.bootstrap = function (done) {
           console.log(err)
           workOrderData.forEach(function (dataPoint) {
             WorkOrderData.create({
-              workOrder: workorder,
+              campaign: workorder,
               data: dataPoint
             }).exec(function (err) {
               err ? console.log(err) : null
@@ -273,7 +273,7 @@ module.exports.bootstrap = function (done) {
           console.log(err)
           workOrderData.forEach(function (dataPoint) {
             WorkOrderData.create({
-              workOrder: workorder,
+              campaign: workorder,
               data: dataPoint
             }).exec(function (err) {
               err ? console.log(err) : null
