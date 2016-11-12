@@ -157,25 +157,44 @@ module.exports.bootstrap = function (done) {
   ok = Promise.resolve();
 
   ok = ok.then(function () {
+    return Role.create({ name: 'registered' })
+  })
+
+  ok = ok.then(function () {
+    return Role.create({ name: 'associate' })
+  })
+
+  ok = ok.then(function () {
+    return Role.create({ name: 'admin' })
+  })
+
+  ok = ok.then(function () {
     return Promise.map(users, function (user) {
       return User.register(user)
     });
   })
 
-  ok = ok.then(function () {
-    return PermissionService.createRole({
-      name: 'associate',
-      permissions: [{
-        action: 'read',
-        model: 'workOrder'
-      },
-        {
-          action: 'update',
-          model: 'workOrder'
-        }],
-      users: ['associate']
-    })
-  });
+  ok = ok.then(function(){
+    return User.findOne({username: 'associate'})
+    .then(function(user){
+      return UserService.assignRole(user.id, 'associate')
+    });
+  })
+
+  // ok = ok.then(function () {
+  //   return PermissionService.createRole({
+  //     name: 'associate',
+  //     permissions: [{
+  //       action: 'read',
+  //       model: 'workOrder'
+  //     },
+  //       {
+  //         action: 'update',
+  //         model: 'workOrder'
+  //       }],
+  //     users: ['associate']
+  //   })
+  // });
 
   ok = ok.then(function () {
     return Promise.map(products, function (product) {
@@ -192,7 +211,7 @@ module.exports.bootstrap = function (done) {
   ok = ok.then(function () {
     return User.find({ username: 'registered' }).exec(function (err, user) {
       Product.find({}).exec(function (error, product) {
-        WorkOrder.create({
+        Campaign.create({
           id: 1,
           requestedDate: new Date(),
           keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
@@ -218,7 +237,7 @@ module.exports.bootstrap = function (done) {
   ok = ok.then(function () {
     return User.find({ username: 'registered' }).exec(function (err, user) {
       Product.find({}).exec(function (error, product) {
-        WorkOrder.create({
+        Campaign.create({
           id: 2,
           requestedDate: new Date(),
           keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
@@ -240,10 +259,10 @@ module.exports.bootstrap = function (done) {
     });
   })
 
-    ok = ok.then(function () {
+  ok = ok.then(function () {
     return User.find({ username: 'registered2' }).exec(function (err, user) {
       Product.find({}).exec(function (error, product) {
-        WorkOrder.create({
+        Campaign.create({
           id: 3,
           requestedDate: new Date(),
           keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
@@ -269,24 +288,24 @@ module.exports.bootstrap = function (done) {
   //permissions
   ////////////////////////////////////////////////////////////////////////////////////////
 
-  ok = ok.then(function () {
-    return PermissionService.grant({
-      role: 'registered',
-      model: 'workorder',
-      action: 'update',
-      criteria: { blacklist: ['keywords', 'assignedUser', 'acceptedDate', 'requestedDate', 'completedDate', 'user', 'product'] }
-    })
-  })
+  // ok = ok.then(function () {
+  //   return PermissionService.grant({
+  //     role: 'registered',
+  //     model: 'workorder',
+  //     action: 'update',
+  //     criteria: { blacklist: ['keywords', 'assignedUser', 'acceptedDate', 'requestedDate', 'completedDate', 'user', 'product'] }
+  //   })
+  // })
 
-  ok = ok.then(function () {
-    return PermissionService.grant({
-      role: 'registered',
-      model: 'workorder',
-      action: 'read',
-      criteria: { 
-        blacklist: ['paymentID'] }
-    })
-  })
+  // ok = ok.then(function () {
+  //   return PermissionService.grant({
+  //     role: 'registered',
+  //     model: 'workorder',
+  //     action: 'read',
+  //     criteria: { 
+  //       blacklist: ['paymentID'] }
+  //   })
+  // })
 
   ok.then(function () {
     done();

@@ -22,13 +22,7 @@ module.exports.policies = {
      '*': [
      'basicAuth',
      'passport',
-     'sessionAuth',
-     'ModelPolicy',
-     'AuditPolicy',
-     'OwnerPolicy',
-     'PermissionPolicy',
-     'RolePolicy',
-     'CriteriaPolicy'
+     'sessionAuth'
   ],
 
    AuthController: {
@@ -41,6 +35,12 @@ module.exports.policies = {
 
    SwaggerController:{
      '*': ['passport']
+   },
+
+   CampaignController:{
+     '*': ['passport'],
+     'update': ['passport','campaignUpdatePolicy'],
+     'all': ['passport','campaignGetPolicy']
    }
 
   /***************************************************************************
