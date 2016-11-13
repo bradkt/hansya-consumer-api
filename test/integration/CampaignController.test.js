@@ -6,6 +6,143 @@ var await = require('asyncawait/await')
 var request
 
 describe('CampaignController', function () {
+    afterEach(async(function () {
+        await(Campaign.destroy({}))
+        await(Poster.destroy({}))
+        await(Message.destroy({}))
+        await(Conversation.destroy({}))
+    }))
+    beforeEach(async(function () {
+        var user = await(User.findOne({ username: 'registered' }))
+        var products = await(Product.find({}))
+        await(Campaign.create({
+            id: 1,
+            requestedDate: new Date(),
+            keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+            user: user,
+            product: products[0],
+            paid: true,
+            paymentID: 'abcd12'
+        }))
+        await(Campaign.create({
+            id: 1,
+            requestedDate: new Date(),
+            keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+            user: user,
+            product: products[0],
+            paid: true,
+            paymentID: 'abcd12'
+        }))
+        var otherUser = await(User.findOne({ username: 'registered2' }))
+        await(Campaign.create({
+            id: 1,
+            requestedDate: new Date(),
+            keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+            user: otherUser,
+            product: products[0],
+            paid: true,
+            paymentID: 'abcd12'
+        }))
+        var campaign = await(Campaign.findOne({ id: 1 }))
+        posters = [{
+            "name": "Jarrett Parker",
+            "screen_name": "ParkerJ",
+            "location": "Addison, TX",
+            "ip": "127.01.01.01",
+            "profile_image": "jpg"
+        }]
+        await(Poster.findOrCreate(posters[0]))
+        metrics = [{
+            "message_id": "686998660635324416",
+            "sentiment_score": "1",
+            "likes": 71,
+            "shares": 89,
+            "impressions": 1010,
+            "engagements": 529,
+            "engagement_rate": 52,
+            "is_ad_clicked": 1,
+            "click_time": "2016-03-29 13:17:5,"
+        },
+            {
+                "message_id": "698674753033392129",
+                "sentiment_score": ".5",
+                "likes": 1768,
+                "shares": 1489,
+                "impressions": 11710,
+                "engagements": 3219,
+                "engagement_rate": 29,
+                "is_ad_clicked": 0,
+                "click_time": "2016-03-29 17:34:5,"
+            }
+        ]
+
+        messages = [{
+            "mid": "686998660635324416",
+            "device": "ios",
+            "datetime": "2016-01-12 14:50:19",
+            "location": "Bedford, NH",
+            "text": "If you're ever in the area getting your car serviced be sure to stop in here at Chipotle! They\u2026 https://www.instagram.com/p/BAc4ryrsHsA/",
+            "screen_name": "ParkerJ",
+            "message_content": [
+                "this is string1",
+                "this is string2",
+                "this is string3"
+            ],
+            "u_name": "Zzerbe",
+            "is_reply_to": 0,
+            "is_ad_link": 0
+        }, {
+                "mid": "698674753033392129",
+                "device": "ios",
+                "datetime": "2016-02-13 20:06:56",
+                "location": "Barboursville, WV",
+                "text": "Early Valentine's Day chipotle with this babe ???????????? @hamhowes @ Chipotle Mexican Grill https://www.instagram.com/p/BBv2WzZxmM9/",
+                "screen_name": "ParkerJ",
+                "message_content": [
+                    "this is string1",
+                    "this is string2",
+                    "this is string3"
+                ],
+                "u_name": "joskater",
+                "is_reply_to": 0,
+                "is_ad_link": 0
+            }]
+
+        conversations = [{
+            "con_id": "144996802353758208",
+            "depth": "3",
+            "is_reply_to": 1,
+            "convo_thread": ["698674753033392129", "686998660635324416"]
+        }]
+
+
+
+        await(Promise.all(messages.map(async(function (message) {
+            var metric = metrics.filter(function (metric) {
+                return metric.message_id == message.mid
+            })
+            var poster = await(Poster.findOne({ screen_name: message.screen_name }))
+            if (!poster) { return false }
+            await(Message.create({
+                id: message.mid,
+                campaign: campaign.id,
+                metrics: metric[0],
+                poster: poster.id,
+                message: message
+            }))
+        }))))
+
+
+        var messages = await(Message.find({}))
+
+        await(Promise.all(conversations.map(async(function (conversation) {
+            await(Conversation.create({
+                id: conversation.con_id,
+                messages: conversation.convo_thread,
+                campaign: campaign.id
+            }))
+        }))))
+    }))
 
     describe('RegisteredUsers', function () {
         before(function () {

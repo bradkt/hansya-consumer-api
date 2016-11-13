@@ -8,10 +8,16 @@
 module.exports = {
 
   attributes: {
+    id: {
+      type: 'string',
+      primaryKey: true,
+      unique: true
+    },
     requestedDate: {
       type: 'datetime',
       required: true,
-      index: true
+      index: true,
+      defaultsTo: new Date()
     },
     acceptedDate: {
       type: 'datetime'

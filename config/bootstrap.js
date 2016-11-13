@@ -78,81 +78,13 @@ module.exports.bootstrap = function (done) {
       email: 'associate@example.com',
       username: 'associate',
       password: 'associate1234'
-    }]
-
-  var workOrderData = [
-    {
-      "dev": "ios",
-      "dt": "2016-03-29 22:04:56",
-      "loc": "Addison, TX",
-      "r_data": "Thanks @chipotletweets for the free meal. #dinnertime @ Chipotle https://www.instagram.com/p/BDj0xBXJO2M/",
-      "s_name": "DJ Counts",
-      "tid": "714996802353758208",
-      "u_name": "1maclassicman"
     },
     {
-      "dev": "ios",
-      "dt": "2016-06-10 21:14:46",
-      "loc": "Aiken, SC",
-      "r_data": "Celebrating @skatparker getting a job the best way we know how: Chipotle. So proud of how\u2026 https://www.instagram.com/p/BGftDbvhTCg/\u00a0",
-      "s_name": "Jarrett Parker",
-      "tid": "741438490576072704",
-      "u_name": "jarrettp_"
-    },
-    {
-      "dev": "ios",
-      "dt": "2016-05-15 15:20:36",
-      "loc": "Anaheim, CA",
-      "r_data": "The douchebag parking award of day goes to... #fail @ Chipotle Mexican Grill https://www.instagram.com/p/BFcH2izrWil/",
-      "s_name": "Michael Quiles",
-      "tid": "731927280310591488",
-      "u_name": "Mike12329"
-    },
-    {
-      "dev": "ios",
-      "dt": "2016-02-26 01:46:59",
-      "loc": "Anaheim, CA",
-      "r_data": "When I realize I'm hungry after recording all day but Chipotle is closed. #hangryface\u2026 https://www.instagram.com/p/BCPWz5EyCzl/",
-      "s_name": "Steve Channell",
-      "tid": "703108983385554944",
-      "u_name": "SteveChannell"
-    },
-    {
-      "dev": "ios",
-      "dt": "2016-02-08 16:25:33",
-      "loc": "Anaheim, CA",
-      "r_data": "I love my wonderful friends :) #chipotle #freeburrito #quicktellsteve @chipotletweets #burrito\u2026 https://www.instagram.com/p/BBilCuBSC1X/",
-      "s_name": "Steve Channell",
-      "tid": "696807099687264256",
-      "u_name": "SteveChannell"
-    },
-    {
-      "dev": "ios",
-      "dt": "2016-01-07 15:54:12",
-      "loc": "Apple Valley, CA",
-      "r_data": "Think for yourself???????? @chipotletweets #chipotle #weightloss #weightwatchers #weightlosssupport\u2026 https://www.instagram.com/p/BAQIBDjRK52/",
-      "s_name": "Mshealthycanbegood",
-      "tid": "685202799865556993",
-      "u_name": "Mshealthycanbgd"
-    },
-    {
-      "dev": "ios",
-      "dt": "2016-04-13 19:11:43",
-      "loc": "Arcadia, CA",
-      "r_data": "My burrito @ Chipotle Mexican Grill https://www.instagram.com/p/BEKI3hknuGrRoW9NdHS62YT_TTwKwd3i0-OZ380/\u00a0\u2026",
-      "s_name": "Jonathan Ippolito",
-      "tid": "720389030802796544",
-      "u_name": "JonathanIppoli1"
-    },
-    {
-      "dev": "ios",
-      "dt": "2016-04-13 19:10:57",
-      "loc": "Arcadia, CA",
-      "r_data": "Large Root-beer . @ Chipotle Mexican Grill https://www.instagram.com/p/BEKIx0_nuGikRzUU7YKTVMbAX-AH2690jKOx0s0/\u00a0\u2026",
-      "s_name": "Jonathan Ippolito",
-      "tid": "720388835142692864",
-      "u_name": "JonathanIppoli1"
-    }]
+      email: 'admin@example.com',
+      username: 'admin',
+      password: 'admin1234'
+    }
+    ]
 
   ok = Promise.resolve();
 
@@ -208,81 +140,81 @@ module.exports.bootstrap = function (done) {
     }, { concurrency: 1 })
   })
 
-  ok = ok.then(function () {
-    return User.find({ username: 'registered' }).exec(function (err, user) {
-      Product.find({}).exec(function (error, product) {
-        Campaign.create({
-          id: 1,
-          requestedDate: new Date(),
-          keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-          user: user[0],
-          product: product[0],
-          paid: true,
-          paymentID: 'abcd12'
-        }).exec(function (err, workorder) {
-          console.log(err)
-          workOrderData.forEach(function (dataPoint) {
-            WorkOrderData.create({
-              campaign: workorder,
-              data: dataPoint
-            }).exec(function (err) {
-              err ? console.log(err) : null
-            })
-          })
-        })
-      })
-    });
-  })
+  // ok = ok.then(function () {
+  //   return User.find({ username: 'registered' }).exec(function (err, user) {
+  //     Product.find({}).exec(function (error, product) {
+  //       Campaign.create({
+  //         id: 1,
+  //         requestedDate: new Date(),
+  //         keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+  //         user: user[0],
+  //         product: product[0],
+  //         paid: true,
+  //         paymentID: 'abcd12'
+  //       }).exec(function (err, workorder) {
+  //         console.log(err)
+  //         workOrderData.forEach(function (dataPoint) {
+  //           WorkOrderData.create({
+  //             campaign: workorder,
+  //             data: dataPoint
+  //           }).exec(function (err) {
+  //             err ? console.log(err) : null
+  //           })
+  //         })
+  //       })
+  //     })
+  //   });
+  // })
 
-  ok = ok.then(function () {
-    return User.find({ username: 'registered' }).exec(function (err, user) {
-      Product.find({}).exec(function (error, product) {
-        Campaign.create({
-          id: 2,
-          requestedDate: new Date(),
-          keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-          user: user[0],
-          product: product[0],
-          paid: false
-        }).exec(function (err, workorder) {
-          console.log(err)
-          workOrderData.forEach(function (dataPoint) {
-            WorkOrderData.create({
-              campaign: workorder,
-              data: dataPoint
-            }).exec(function (err) {
-              err ? console.log(err) : null
-            })
-          })
-        })
-      })
-    });
-  })
+  // ok = ok.then(function () {
+  //   return User.find({ username: 'registered' }).exec(function (err, user) {
+  //     Product.find({}).exec(function (error, product) {
+  //       Campaign.create({
+  //         id: 2,
+  //         requestedDate: new Date(),
+  //         keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+  //         user: user[0],
+  //         product: product[0],
+  //         paid: false
+  //       }).exec(function (err, workorder) {
+  //         console.log(err)
+  //         workOrderData.forEach(function (dataPoint) {
+  //           WorkOrderData.create({
+  //             campaign: workorder,
+  //             data: dataPoint
+  //           }).exec(function (err) {
+  //             err ? console.log(err) : null
+  //           })
+  //         })
+  //       })
+  //     })
+  //   });
+  // })
 
-  ok = ok.then(function () {
-    return User.find({ username: 'registered2' }).exec(function (err, user) {
-      Product.find({}).exec(function (error, product) {
-        Campaign.create({
-          id: 3,
-          requestedDate: new Date(),
-          keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-          user: user[0],
-          product: product[0],
-          paid: false
-        }).exec(function (err, workorder) {
-          console.log(err)
-          workOrderData.forEach(function (dataPoint) {
-            WorkOrderData.create({
-              campaign: workorder,
-              data: dataPoint
-            }).exec(function (err) {
-              err ? console.log(err) : null
-            })
-          })
-        })
-      })
-    });
-  })
+  // ok = ok.then(function () {
+  //   return User.find({ username: 'registered2' }).exec(function (err, user) {
+  //     Product.find({}).exec(function (error, product) {
+  //       Campaign.create({
+  //         id: 3,
+  //         requestedDate: new Date(),
+  //         keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+  //         user: user[0],
+  //         product: product[0],
+  //         paid: false
+  //       }).exec(function (err, workorder) {
+  //         console.log(err)
+  //         workOrderData.forEach(function (dataPoint) {
+  //           WorkOrderData.create({
+  //             campaign: workorder,
+  //             data: dataPoint
+  //           }).exec(function (err) {
+  //             err ? console.log(err) : null
+  //           })
+  //         })
+  //       })
+  //     })
+  //   });
+  // })
 
   ////////////////////////////////////////////////////////////////////////////////////////
   //permissions

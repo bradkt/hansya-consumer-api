@@ -43,6 +43,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.1.2",
+    "sails-hook-autoreload": "^0.13.2",
     "sails-swagger": "^0.5.1",
     "supertest": "^2.0.1",
     "supertest-as-promised": "^4.0.2",
