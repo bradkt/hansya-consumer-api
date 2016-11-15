@@ -17,11 +17,11 @@ module.exports = {
         },
         metrics: {
             type: 'json',
-            // required: true
+            required: true
         },
         poster: {
             model: 'poster',
-            // required: true
+            required: true
         }
     }
 };

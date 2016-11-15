@@ -294,7 +294,32 @@ describe('CampaignController', function () {
                 .send({ identifier: 'associate@example.com', password: 'associate1234' })
         })
 
-        describe('#get', function () {
+        describe('#getAll', function () {
+            it('should return all campaigns', async(function () {
+                var response = await(request.get('/campaign/all'))
+                return (
+                    expect(response.statusCode).to.equal(200) &&
+                    expect(response.body.length).to.equal(3))
+            }))
+
+            it('should return all campaigns regardless of verb & nothing should be deleted', async(function () {
+                var response = await(request.delete('/campaign/all'))
+                var data = await(Campaign.find({}))
+                return (expect(response.body.length).to.equal(3) &&
+                    expect(response.statusCode).to.equal(200) &&
+                    expect(data.length).to.equal(3))
+            }))
+        })
+    })
+    describe('admin users', function () {
+        before(function () {
+            request = require('supertest-as-promised').agent(sails.hooks.http.app);
+            return request
+                .post('/auth/local')
+                .send({ identifier: 'admin@example.com', password: 'admin1234' })
+        })
+
+        describe('#getAll', function () {
             it('should return all campaigns', async(function () {
                 var response = await(request.get('/campaign/all'))
                 return (

@@ -12,9 +12,7 @@ module.exports = {
             required: true
         },
         messages: {
-            collection: 'message',
-            // type: 'json',
-            // required: true
+            collection: 'message'
         }
     }
 }

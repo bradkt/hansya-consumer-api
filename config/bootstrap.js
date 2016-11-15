@@ -113,6 +113,13 @@ module.exports.bootstrap = function (done) {
     });
   })
 
+  ok = ok.then(function(){
+    return User.findOne({username: 'admin'})
+    .then(function(user){
+      return UserService.assignRole(user.id, 'admin')
+    });
+  })
+
   // ok = ok.then(function () {
   //   return PermissionService.createRole({
   //     name: 'associate',

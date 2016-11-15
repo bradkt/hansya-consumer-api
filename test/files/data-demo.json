@@ -31,7 +31,7 @@
   "users": [
     {
       "name": "Jarrett Parker",
-      "screen_name": "ParkerJ",
+      "screen_name": "jarrettp_",
       "location": "Addison, TX",
       "ip": "127.01.01.01",
       "profile_image": "jpg"
@@ -89,14 +89,84 @@
       "name": "Nicole Saltos",
       "screen_name": "NicoleSaltos_",
       "location": "Atlanta, GA",
-      "ip": "127.67.01.81",
+      "ip": "127.67.01.84",
       "profile_image": "jpg"
     },
     {
       "name": "WPIR984Fm",
       "screen_name": "WPIR 98.4Fm",
       "location": "Addison, TX",
-      "ip": "127.76.01.91",
+      "ip": "127.76.01.85",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "iJasonYu",
+      "screen_name": "Jay L. Yu",
+      "location": "Atlanta, GA",
+      "ip": "128.76.01.86",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "cherelle8604",
+      "screen_name": "Cherelle",
+      "location": "Atlanta, GA",
+      "ip": "128.76.01.88",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "PoundSignDead",
+      "screen_name": "Delly Ralph",
+      "location": "Atlantic City, NJ",
+      "ip": "128.76.01.92",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "eazyland973",
+      "screen_name": "Eric Ogada",
+      "location": "Atlantic City, NJ",
+      "ip": "128.76.01.93",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "Jakethecole",
+      "screen_name": "jacob.",
+      "location": "Austin, TX",
+      "ip": "128.76.01.94",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "KennyOnTheMic",
+      "screen_name": "KennyOnTheMic \u00a9",
+      "location": "Baltimore, MD",
+      "ip": "128.76.01.95",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "discobop",
+      "screen_name": "Jonathan B. Knox",
+      "location": "Baltimore, MD",
+      "ip": "128.76.01.96",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "ronisunthawed",
+      "screen_name": "Ron",
+      "location": "Baltimore, MD",
+      "ip": "128.76.01.97",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "joskater",
+      "screen_name": "Big Dick Bee 30265",
+      "location": "Barboursville, WV",
+      "ip": "128.76.01.98",
+      "profile_image": "jpg"
+    },
+    {
+      "name": "Zzerbe",
+      "screen_name": "Zack Zerbe",
+      "location": "Bedford, NH",
+      "ip": "128.76.01.99",
       "profile_image": "jpg"
     },
     {
@@ -136,8 +206,7 @@
       "con_id": "164996802353758208",
       "depth": "6",
       "is_reply_to": 0,
-      "convo_thread": ["699664860670488576","683420798921605125","683416627698876417","763550065713614848","201615822456889311","701615822456889346"]
-    },
+      "convo_thread": ["699664860670488576","683420798921605125","683416627698876417","763550065713614848","201615822456889311","701615822456889346"]    },
     {
       "con_id": "174996802353758208",
       "depth": "2",
@@ -165,7 +234,7 @@
   ],
   "metrics": [
     {
-      "message_id": "714996802353758208,",
+      "message_id": "714996802353758208",
       "sentiment_score": ".4",
       "likes": 8,
       "shares": 9,
@@ -176,7 +245,7 @@
       "click_time": "2016-03-29 22:04:5,"
     },
     {
-      "message_id": "741438490576072704,",
+      "message_id": "741438490576072704",
       "sentiment_score": ".3",
       "likes": 11,
       "shares": 19,
@@ -187,7 +256,7 @@
       "click_time": "2016-03-29 20:04:5,"
     },
     {
-      "message_id": "716087721714790400,",
+      "message_id": "716087721714790400",
       "sentiment_score": ".4",
       "likes": 28,
       "shares": 29,
@@ -198,7 +267,7 @@
       "click_time": "2016-03-29 12:04:5,"
     },
     {
-      "message_id": "695043806324989952,",
+      "message_id": "695043806324989952",
       "sentiment_score": ".6",
       "likes": 38,
       "shares": 39,
@@ -209,7 +278,7 @@
       "click_time": "2016-03-29 11:04:5,"
     },
     {
-      "message_id": "721116795332075520,",
+      "message_id": "721116795332075520",
       "sentiment_score": ".9",
       "likes": 48,
       "shares": 49,
@@ -220,7 +289,7 @@
       "click_time": "2016-03-29 10:04:5,"
     },
     {
-      "message_id": "697907668191735809,",
+      "message_id": "697907668191735809",
       "sentiment_score": ".2",
       "likes": 58,
       "shares": 59,
@@ -231,7 +300,7 @@
       "click_time": "2016-03-28 10:10:5,"
     },
     {
-      "message_id": "766510720066260992,",
+      "message_id": "766510720066260992",
       "sentiment_score": ".4",
       "likes": 78,
       "shares": 79,
@@ -586,7 +655,7 @@
       "datetime": "2016-07-07 12:43:50",
       "location": "Atlanta, GA",
       "text": "@whatsyourgusto has arrive on Ponce!\\n\\n50/50, chicken, chipotle mango avocado! @ Gusto https://www.instagram.com/p/BHkUC2hjtZU/",
-      "screen_name": "Morgan J. Lopes",
+      "screen_name": "MorganJLopes",
       "message_content": [
         "this is string1",
         "this is string2",
@@ -602,7 +671,7 @@
       "datetime": "2016-05-18 12:58:47",
       "location": "Atlanta, GA",
       "text": "When you drive an hour for chipotle after not living 10 mins away\u2026 https://www.instagram.com/p/BFjmAp4lQraqxQC6i9D4g801MIwxUgaDE1uPcY0/\u00a0\u2026",
-      "screen_name": "Nicole Saltos",
+      "screen_name": "NicoleSaltos_",
       "message_content": [
         "this is string1",
         "this is string2",
@@ -727,7 +796,6 @@
     {
       "mid": "201615822456889311",
       "device": "ios",
-
       "datetime": "2016-02-21 22:53:42",
       "location": "Atlantic City, NJ",
       "text": "Smokehouse Cheddar with chipotle mayo #johnnyrockets #burgers #goodfood #ac #atlanticcity\u2026 https://www.instagram.com/p/BCEvzPSS3bv/",

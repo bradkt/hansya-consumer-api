@@ -4,11 +4,11 @@ var await = require('asyncawait/await')
 var Promise = require('bluebird')
 
 module.exports = {
-    createPostersIfNeeded: function (posters) {
+    createPostersIfNeeded: async(function (posters) {
         await(Promise.all(posters.map(async(function (poster) {
             await(Poster.findOrCreate(poster))
         }))))
-    },
+    }),
 
     createMessages: async(function (messages, metrics, campaign) {
         await(Promise.all(messages.map(async(function (message) {
@@ -16,7 +16,6 @@ module.exports = {
                 return metric.message_id == message.mid
             })
             var poster = await(Poster.findOne({ screen_name: message.screen_name }))
-            if (!poster) { return false }
             await(Message.create({
                 id: message.mid,
                 campaign: campaign.id,
@@ -28,6 +27,21 @@ module.exports = {
     }),
 
     createConversations: async(function (conversations, campaign) {
+        // return Conversation.create({
+        //     id: conversations[0].con_id,
+        //     messages: conversations[0].convo_thread,
+        //     campaign: campaign.id
+        // }).then(function () {
+        //     return Conversation.create({
+        //         id: conversations[1].con_id,
+        //         messages: conversations[1].convo_thread,
+        //         campaign: campaign.id
+        //     }).then(function () {
+        //         return
+        //     })
+
+        // })
+
         await(Promise.all(conversations.map(async(function (conversation) {
             await(Conversation.create({
                 id: conversation.con_id,
@@ -35,5 +49,6 @@ module.exports = {
                 campaign: campaign.id
             }))
         }))))
+        // var cvs = await(Conversation.find({}).populate('messages'))
     })
 }

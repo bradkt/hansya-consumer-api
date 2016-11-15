@@ -190,8 +190,14 @@ describe('CampaignDataController', function () {
             it('should store the data from the file', async(function () {
                 var res = await(request.post('/campaignData/upload')
                     .attach('data', 'test/files/data-demo.json'))
-
-                return expect(res.statusCode).to.equal(200)
+                var messages = await(Message.find({}))
+                var posters = await(Poster.find({}))
+                var conversations = await(Conversation.find({}))
+                return (expect(res.statusCode).to.equal(200) &&
+                        expect(messages.length).to.equal(26) &&
+                        expect(posters.length).to.equal(21) &&
+                        expect(conversations.length).to.equal(9)
+                )
             }))
         })
     })

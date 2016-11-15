@@ -40,7 +40,7 @@ module.exports.policies = {
    CampaignController:{
      '*': ['passport'],
      'update': ['passport','campaignUpdatePolicy'],
-     'all': ['passport','campaignGetPolicy']
+     'all': ['passport','isAssociateOrAdminPolicy']
    }
 
   /***************************************************************************
