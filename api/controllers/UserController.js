@@ -14,8 +14,6 @@ _.merge(exports, {
   },
 
   create: async(function (req, res, next) {
-    console.log(req.allParams().identifier)
-    console.log(req.allParams().username)
     var email = req.allParams().identifier
     var username = req.allParams().username
 

@@ -41,6 +41,12 @@ module.exports.policies = {
      '*': ['passport'],
      'update': ['passport','campaignUpdatePolicy'],
      'all': ['passport','isAssociateOrAdminPolicy']
+   },
+   IndustryController:{
+     'create': ['passport','isAdminPolicy']
+   },
+   ProductController:{
+     'create': ['passport','isAdminPolicy']
    }
 
   /***************************************************************************
