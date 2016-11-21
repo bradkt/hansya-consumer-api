@@ -16,6 +16,22 @@ module.exports = async(function (req, res, next) {
             return res.forbidden();
         }
     }
+    if (await(UserService.hasRole(req.user.id, 'associate'))) {
+        if (req.allParams().keywords ||
+            req.allParams().requestedDate ||
+            req.allParams().user ||
+            req.allParams().product) {
+            return res.forbidden();
+        }
+    }
+
+    if (await(UserService.hasRole(req.user.id, 'admin'))) {
+        if (req.allParams().keywords ||
+            req.allParams().requestedDate ||
+            req.allParams().user) {
+            return res.forbidden();
+        }
+    }
 
 
     return next();

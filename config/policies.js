@@ -19,35 +19,47 @@
 
 module.exports.policies = {
 
-     '*': [
-     'basicAuth',
-     'passport',
-     'sessionAuth'
+  '*': [
+    'basicAuth',
+    'passport',
+    'sessionAuth'
   ],
 
-   AuthController: {
-     '*': [ 'passport' ]
-   },
+  AuthController: {
+    '*': ['passport']
+  },
 
-   UserController:{
-     'create': [ 'passport' ],
-   },
+  CampaignController: {
+    '*': ['passport'],
+    'update': ['passport', 'campaignUpdatePolicy'],
+    'all': ['passport', 'isAssociateOrAdminPolicy'],
+    'destroy': ['passport','isAssociateOrAdminPolicy']
+  },
+  CampaignDataController: {
+    '*': ['passport', 'isAssociateOrAdminPolicy']    
+  },
+  IndustryController: {
+    'create': ['passport', 'isAdminPolicy'],
+    'destroy': ['passport', 'isAdminPolicy'],
+    'update': ['passport', 'isAdminPolicy']
+  },
+  ProductController: {
+    'create': ['passport', 'isAdminPolicy'],
+    'destroy': ['passport', 'isAdminPolicy'],
+    'update': ['passport', 'isAdminPolicy']
+  },
+  UserController: {
+    'create': ['passport', 'isNotRegisteredPolicy'],
+    'all': ['passport', 'isAssociateOrAdminPolicy']
+  },
 
-   SwaggerController:{
-     '*': ['passport']
-   },
 
-   CampaignController:{
-     '*': ['passport'],
-     'update': ['passport','campaignUpdatePolicy'],
-     'all': ['passport','isAssociateOrAdminPolicy']
-   },
-   IndustryController:{
-     'create': ['passport','isAdminPolicy']
-   },
-   ProductController:{
-     'create': ['passport','isAdminPolicy']
-   }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Utility controllers
+  SwaggerController: {
+    '*': ['passport']
+  }
 
   /***************************************************************************
   *                                                                          *
@@ -64,7 +76,7 @@ module.exports.policies = {
   * and its actions                                                          *
   *                                                                          *
   ***************************************************************************/
-	// RabbitController: {
+  // RabbitController: {
 
 		// Apply the `false` policy as the default for all of RabbitController's actions
 		// (`false` prevents all access, which ensures that nothing bad happens to our rabbits)
@@ -77,5 +89,5 @@ module.exports.policies = {
 		// Apply the `isNiceToAnimals` AND `hasRabbitFood` policies
 		// before letting any users feed our rabbits
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
-	// }
+  // }
 };

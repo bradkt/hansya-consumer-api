@@ -1,4 +1,6 @@
 var expect = require('chai').expect
+var chai = require('chai')
+chai.config.truncateThreshold = 0;
 
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
@@ -6,6 +8,13 @@ var await = require('asyncawait/await')
 var request
 
 describe('CampaignController', function () {
+    before(async(function () {
+        newUser = await(User.register({ email: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 1 }))
+        console.log("Created: "+ newUser)
+    }))
+    after(async(function () {
+        await(User.destroy({ username: 'newuser' }))
+    }))
     afterEach(async(function () {
         await(Campaign.destroy({}))
         await(Poster.destroy({}))
@@ -13,8 +22,9 @@ describe('CampaignController', function () {
         await(Conversation.destroy({}))
     }))
     beforeEach(async(function () {
-        var user = await(User.findOne({ username: 'registered' }))
-        var products = await(Product.find({}))
+        user = await(User.findOne({ username: 'registered' }))
+        companies = await(Company.find({}))
+        products = await(Product.find({}))
         await(Campaign.create({
             id: 1,
             requestedDate: new Date(),
@@ -22,26 +32,43 @@ describe('CampaignController', function () {
             user: user,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12'
+            paymentID: 'abcd12',
+            company: 1,
+            visibility: 'company'
         }))
         await(Campaign.create({
-            id: 1,
+            id: 2,
             requestedDate: new Date(),
             keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
             user: user,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12'
+            paymentID: 'abcd12',
+            company: 1,
+            visibility: 'user'
+        }))
+        await(Campaign.create({
+            id: 4,
+            requestedDate: new Date(),
+            keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added', 'to', 'this'],
+            user: newUser,
+            product: products[0],
+            paid: true,
+            paymentID: 'abcd12',
+            company: 1,
+            visibility: 'user'
         }))
         var otherUser = await(User.findOne({ username: 'registered2' }))
         await(Campaign.create({
-            id: 1,
+            id: 3,
             requestedDate: new Date(),
             keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
             user: otherUser,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12'
+            paymentID: 'abcd12',
+            company: 2,
+            visibility: 'company'
         }))
         var campaign = await(Campaign.findOne({ id: 1 }))
         posters = [{
@@ -144,6 +171,26 @@ describe('CampaignController', function () {
         }))))
     }))
 
+    describe('OtherRegisteredUser', function () {
+        before(function () {
+            request = require('supertest-as-promised').agent(sails.hooks.http.app);
+            return request
+                .post('/auth/local')
+                .send({ identifier: 'newuser@example.com', password: 'newuser1234' })
+        })
+        describe('#get', function () {
+            it('should return all the campaigns for the registered user', async(function () {
+                var res = await(request.get('/campaign'))
+                return (expect(res.body.length).to.equal(2) &&
+                    expect(res.statusCode).to.equal(200))
+            }))
+            it('should not return the campaigns for the other user that is locked to the user', async(function(){
+                var res = await(request.get('/campaign'))
+                return (expect(res.body.findIndex(function(campaign){campaign.id === 2})).to.equal(-1))                
+            }))
+        })
+    })
+
     describe('RegisteredUsers', function () {
         before(function () {
             request = require('supertest-as-promised').agent(sails.hooks.http.app);
@@ -187,7 +234,7 @@ describe('CampaignController', function () {
             }))
 
             it('should not matter what verb is used', async(function () {
-                var response = await(request.delete('/campaign/all'))
+                var response = await(request.del('/campaign/all'))
                 return expect(response.statusCode).to.equal(403)
             }))
         })
@@ -284,6 +331,32 @@ describe('CampaignController', function () {
             }))
 
         })
+        describe('delete', function () {
+            it('should not let me delete the campaign', async(function () {
+                var campaigns = await(request.get('/campaign'))
+                var campaign = campaigns.body[0]
+                var response = await(request.del('/campaign/' + campaign.id))
+                return (expect(response.statusCode).to.equal(403) &&
+                    expect(await(Campaign.find({ id: campaign.id })).length).to.equal(1))
+            }))
+        })
+        describe('create', function () {
+            it('should allow me to create a campaign', async(function () {
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    user: user,
+                    product: products[0],
+                    paid: false,
+                    company: 1,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(201) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+            }))
+        })
     })
 
     describe('associate users', function () {
@@ -299,15 +372,133 @@ describe('CampaignController', function () {
                 var response = await(request.get('/campaign/all'))
                 return (
                     expect(response.statusCode).to.equal(200) &&
-                    expect(response.body.length).to.equal(3))
+                    expect(response.body.length).to.equal(4))
             }))
 
             it('should return all campaigns regardless of verb & nothing should be deleted', async(function () {
-                var response = await(request.delete('/campaign/all'))
+                var response = await(request.del('/campaign/all'))
                 var data = await(Campaign.find({}))
-                return (expect(response.body.length).to.equal(3) &&
+                return (expect(response.body.length).to.equal(4) &&
                     expect(response.statusCode).to.equal(200) &&
-                    expect(data.length).to.equal(3))
+                    expect(data.length).to.equal(4))
+            }))
+        })
+
+        describe('post', function () {
+            it('should modify the campaign supplied', async(function () {
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ paid: true, paymentID: '42 baker' }))
+                var campaignDatabase = await(Campaign.findOne({ id: campaign.id }))
+                return (expect(campaignDatabase.paid).to.equal(true) &&
+                    expect(campaignDatabase.paymentID).to.equal('42 baker'))
+            }))
+
+            it('should not let me update my keywords', async(function () {
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ keywords: ['42', 'Grand', 'Fiber one'] }))
+                var campaignDatabase = await(Campaign.findOne({ id: campaign.id }))
+                return (expect(campaignDatabase.keywords).to.not.equal(['42', 'Grand', 'Fiber one']) &&
+                    expect(response.statusCode).to.equal(403))
+            }))
+
+            it('should let me update the assigned associate', async(function () {
+                var associate = await(User.findOne({ username: 'associate' }))
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ assignedUser: associate.id }))
+                var campaignDatabase = await(Campaign.findOne({ id: campaign.id }).populate('assignedUser'))
+                return (expect(campaignDatabase.assignedUser.username).to.deep.equal(associate.username) &&
+                    expect(campaignDatabase.assignedUser.id).to.deep.equal(associate.id) &&
+                    expect(response.statusCode).to.equal(200))
+            }))
+
+            it('should let me update the acceptedDate', async(function () {
+                var date = new Date()
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var campaignDatabaseBefore = await(Campaign.findOne({ id: campaign.id }))
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ acceptedDate: date }))
+                var campaignDatabaseAfter = await(Campaign.findOne({ id: campaign.id }))
+                return (expect(campaignDatabaseAfter.acceptedDate).to.deep.equal(date) &&
+                    expect(response.statusCode).to.equal(200))
+            }))
+
+            it('should not let me update the requestedDate', async(function () {
+                var date = new Date()
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var campaignDatabaseBefore = await(Campaign.findOne({ id: campaign.id }))
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ requestedDate: date }))
+                var campaignDatabaseAfter = await(Campaign.findOne({ id: campaign.id }))
+                return (expect(campaignDatabaseAfter.requestedDate).to.not.deep.equal(date) &&
+                    expect(campaignDatabaseAfter.requestedDate).to.deep.equal(campaignDatabaseBefore.requestedDate) &&
+                    expect(response.statusCode).to.equal(403))
+            }))
+
+            it('should let me update the completedDate', async(function () {
+                var date = new Date()
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var campaignDatabaseBefore = await(Campaign.findOne({ id: campaign.id }))
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ completedDate: date }))
+                var campaignDatabaseAfter = await(Campaign.findOne({ id: campaign.id }))
+                return (expect(campaignDatabaseAfter.completedDate).to.deep.equal(date) &&
+                    expect(response.statusCode).to.equal(200))
+            }))
+
+
+            it('should not let me update the user', async(function () {
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ user: 42 }))
+                var campaignAfter = await(Campaign.findOne({ id: 1 }))
+                return (expect(campaignAfter.user).to.deep.equal(campaign.user) &&
+                    expect(response.statusCode).to.eql(403))
+            }))
+
+            it('should not let me update the product', async(function () {
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var response = await(request.put('/campaign/' + campaign.id)
+                    .send({ product: 88 }))
+                var campaignAfter = await(Campaign.findOne({ id: 1 }))
+                return (expect(campaignAfter.product).to.deep.equal(campaign.product) &&
+                    expect(response.statusCode).to.equal(403))
+            }))
+        })
+        describe('delete', function () {
+            it('should let me delete the campaign', async(function () {
+                var campaigns = await(request.get('/campaign/all'))
+                var campaign = campaigns.body[0]
+                var response = await(request.del('/campaign/' + campaign.id))
+                return (expect(response.statusCode).to.equal(200) &&
+                    expect(await(Campaign.find({ id: campaign.id })).length).to.equal(0))
+            }))
+        })
+        describe('create', function () {
+            it('should allow me to create a campaign', async(function () {
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    user: user,
+                    product: products[0],
+                    paid: false,
+                    company: 1,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(201) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
             }))
         })
     })
@@ -324,16 +515,133 @@ describe('CampaignController', function () {
                 var response = await(request.get('/campaign/all'))
                 return (
                     expect(response.statusCode).to.equal(200) &&
-                    expect(response.body.length).to.equal(3))
+                    expect(response.body.length).to.equal(4))
             }))
 
             it('should return all campaigns regardless of verb & nothing should be deleted', async(function () {
-                var response = await(request.delete('/campaign/all'))
+                var response = await(request.del('/campaign/all'))
                 var data = await(Campaign.find({}))
-                return (expect(response.body.length).to.equal(3) &&
+                return (expect(response.body.length).to.equal(4) &&
                     expect(response.statusCode).to.equal(200) &&
-                    expect(data.length).to.equal(3))
+                    expect(data.length).to.equal(4))
             }))
         })
+    })
+    describe('post', function () {
+        it('should modify the campaign supplied', async(function () {
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ paid: true, paymentID: '42 baker' }))
+            var campaignDatabase = await(Campaign.findOne({ id: campaign.id }))
+            return (expect(campaignDatabase.paid).to.equal(true) &&
+                expect(campaignDatabase.paymentID).to.equal('42 baker'))
+        }))
+
+        it('should not let me update my keywords', async(function () {
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ keywords: ['42', 'Grand', 'Fiber one'] }))
+            var campaignDatabase = await(Campaign.findOne({ id: campaign.id }))
+            return (expect(campaignDatabase.keywords).to.not.equal(['42', 'Grand', 'Fiber one']) &&
+                expect(response.statusCode).to.equal(403))
+        }))
+
+        it('should let me update the assigned associate', async(function () {
+            var associate = await(User.findOne({ username: 'associate' }))
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ assignedUser: associate.id }))
+            var campaignDatabase = await(Campaign.findOne({ id: campaign.id }).populate('assignedUser'))
+            return (expect(campaignDatabase.assignedUser.username).to.deep.equal(associate.username) &&
+                expect(campaignDatabase.assignedUser.id).to.deep.equal(associate.id) &&
+                expect(response.statusCode).to.equal(200))
+        }))
+
+        it('should let me update the acceptedDate', async(function () {
+            var date = new Date()
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var campaignDatabaseBefore = await(Campaign.findOne({ id: campaign.id }))
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ acceptedDate: date }))
+            var campaignDatabaseAfter = await(Campaign.findOne({ id: campaign.id }))
+            return (expect(campaignDatabaseAfter.acceptedDate).to.deep.equal(date) &&
+                expect(response.statusCode).to.equal(200))
+        }))
+
+        it('should not let me update the requestedDate', async(function () {
+            var date = new Date()
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var campaignDatabaseBefore = await(Campaign.findOne({ id: campaign.id }))
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ requestedDate: date }))
+            var campaignDatabaseAfter = await(Campaign.findOne({ id: campaign.id }))
+            return (expect(campaignDatabaseAfter.requestedDate).to.not.deep.equal(date) &&
+                expect(campaignDatabaseAfter.requestedDate).to.deep.equal(campaignDatabaseBefore.requestedDate) &&
+                expect(response.statusCode).to.equal(403))
+        }))
+
+        it('should let me update the completedDate', async(function () {
+            var date = new Date()
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var campaignDatabaseBefore = await(Campaign.findOne({ id: campaign.id }))
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ completedDate: date }))
+            var campaignDatabaseAfter = await(Campaign.findOne({ id: campaign.id }))
+            return (expect(campaignDatabaseAfter.completedDate).to.deep.equal(date) &&
+                expect(response.statusCode).to.equal(200))
+        }))
+
+
+        it('should not let me update the user', async(function () {
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ user: 42 }))
+            var campaignAfter = await(Campaign.findOne({ id: 1 }))
+            return (expect(campaignAfter.user).to.deep.equal(campaign.user) &&
+                expect(response.statusCode).to.eql(403))
+        }))
+
+        it('should let me update the product', async(function () {
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var response = await(request.put('/campaign/' + campaign.id)
+                .send({ product: 88 }))
+            var campaignAfter = await(Campaign.findOne({ id: 1 }))
+            return (expect(campaignAfter.product).to.equal(88) &&
+                expect(response.statusCode).to.equal(200))
+        }))
+    })
+    describe('delete', function () {
+        it('should let me delete the campaign', async(function () {
+            var campaigns = await(request.get('/campaign/all'))
+            var campaign = campaigns.body[0]
+            var response = await(request.del('/campaign/' + campaign.id))
+            return (expect(response.statusCode).to.equal(200) &&
+                expect(await(Campaign.find({ id: campaign.id })).length).to.equal(0))
+        }))
+    })
+    describe('create', function () {
+        it('should allow me to create a campaign', async(function () {
+            var newCampaign = {
+                id: 1000,
+                requestedDate: new Date(),
+                keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                user: user,
+                product: products[0],
+                paid: false,
+                company: 1,
+                visibility: 'user'
+            }
+            var response = await(request.post('/campaign').send(newCampaign))
+            return (expect(response.statusCode).to.equal(201) &&
+                expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+        }))
     })
 });

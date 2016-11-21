@@ -25,9 +25,14 @@ _.merge(exports, {
       sails.services.passport.protocols.local.register(req.body, function (err, user) {
         if (err) return res.negotiate(err);
 
-        res.ok(user);
+        res.created(user);
       });
     }
+  }),
+
+  all: async(function(req, res, next){
+    var users = await(User.find({}).populate('role'))
+    res.ok(users)
   })
 
 });

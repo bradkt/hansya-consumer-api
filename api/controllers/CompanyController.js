@@ -1,7 +1,7 @@
 /**
- * RoleController
+ * CompanyController
  *
- * @description :: Server-side logic for managing roles
+ * @description :: Server-side logic for managing companies
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 

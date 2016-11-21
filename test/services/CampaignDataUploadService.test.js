@@ -192,13 +192,15 @@ describe('CampaignDataUploadService', function () {
         var user = await(User.findOne({ username: 'associate' }))
         var products = await(Product.find({}))
         await(Campaign.create({
-            id: 1,
+            id: 'asdfasdf',
             requestedDate: new Date(),
             keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
             user: user,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12'
+            paymentID: 'abcd12',
+            company: 1,
+            visibility: 'company'
         }))
     }))
     it('should create posters', async(function () {

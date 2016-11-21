@@ -9,6 +9,9 @@ _.merge(exports, {
     attributes: {
         role: {
             model: 'role'
+        },
+        company: {
+            model: 'company'
         }
     },
 

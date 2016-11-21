@@ -12,7 +12,8 @@ module.exports = {
             required: true
         },
         messages: {
-            collection: 'message'
+            collection: 'message',
+            required: true
         }
     }
 }

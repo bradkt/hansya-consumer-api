@@ -34,7 +34,7 @@ module.exports = {
       required: true,
       index: true
     },
-    assignedUser:{
+    assignedUser: {
       model: 'user'
     },
     product: {
@@ -47,6 +47,14 @@ module.exports = {
     },
     paymentID: { //this will be the authorize.net confirmation ID
       type: 'string'
+    },
+    company: {
+      model: 'company',
+      required: true
+    },
+    visibility: {
+      required: true,
+      enum: ['user', 'company']
     }
   }
 };

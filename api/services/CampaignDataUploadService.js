@@ -27,20 +27,6 @@ module.exports = {
     }),
 
     createConversations: async(function (conversations, campaign) {
-        // return Conversation.create({
-        //     id: conversations[0].con_id,
-        //     messages: conversations[0].convo_thread,
-        //     campaign: campaign.id
-        // }).then(function () {
-        //     return Conversation.create({
-        //         id: conversations[1].con_id,
-        //         messages: conversations[1].convo_thread,
-        //         campaign: campaign.id
-        //     }).then(function () {
-        //         return
-        //     })
-
-        // })
 
         await(Promise.all(conversations.map(async(function (conversation) {
             await(Conversation.create({

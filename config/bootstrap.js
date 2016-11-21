@@ -63,16 +63,27 @@ module.exports.bootstrap = function (done) {
       price: parseInt('-1')
     }]
 
+  var companies = [{
+    id: 1,
+    name: 'Target'
+  },
+    {
+      id: 2,
+      name: 'Starbucks'
+    }]
+
   var users = [
     {
       email: 'registered@example.com',
       username: 'registered',
-      password: 'registered1234'
+      password: 'registered1234',
+      company: 1
     },
     {
       email: 'registered2@example.com',
       username: 'registered2',
-      password: 'registered21234'
+      password: 'registered21234',
+      company: 2
     },
     {
       email: 'associate@example.com',
@@ -84,9 +95,15 @@ module.exports.bootstrap = function (done) {
       username: 'admin',
       password: 'admin1234'
     }
-    ]
+  ]
 
   ok = Promise.resolve();
+
+  ok = ok.then(function () {
+    return Promise.map(companies, function (company) {
+      return Company.create(company)
+    });
+  })
 
   ok = ok.then(function () {
     return Role.create({ name: 'registered' })
@@ -106,18 +123,18 @@ module.exports.bootstrap = function (done) {
     });
   })
 
-  ok = ok.then(function(){
-    return User.findOne({username: 'associate'})
-    .then(function(user){
-      return UserService.assignRole(user.id, 'associate')
-    });
+  ok = ok.then(function () {
+    return User.findOne({ username: 'associate' })
+      .then(function (user) {
+        return UserService.assignRole(user.id, 'associate')
+      });
   })
 
-  ok = ok.then(function(){
-    return User.findOne({username: 'admin'})
-    .then(function(user){
-      return UserService.assignRole(user.id, 'admin')
-    });
+  ok = ok.then(function () {
+    return User.findOne({ username: 'admin' })
+      .then(function (user) {
+        return UserService.assignRole(user.id, 'admin')
+      });
   })
 
   // ok = ok.then(function () {
@@ -147,104 +164,7 @@ module.exports.bootstrap = function (done) {
     }, { concurrency: 1 })
   })
 
-  // ok = ok.then(function () {
-  //   return User.find({ username: 'registered' }).exec(function (err, user) {
-  //     Product.find({}).exec(function (error, product) {
-  //       Campaign.create({
-  //         id: 1,
-  //         requestedDate: new Date(),
-  //         keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-  //         user: user[0],
-  //         product: product[0],
-  //         paid: true,
-  //         paymentID: 'abcd12'
-  //       }).exec(function (err, workorder) {
-  //         console.log(err)
-  //         workOrderData.forEach(function (dataPoint) {
-  //           WorkOrderData.create({
-  //             campaign: workorder,
-  //             data: dataPoint
-  //           }).exec(function (err) {
-  //             err ? console.log(err) : null
-  //           })
-  //         })
-  //       })
-  //     })
-  //   });
-  // })
 
-  // ok = ok.then(function () {
-  //   return User.find({ username: 'registered' }).exec(function (err, user) {
-  //     Product.find({}).exec(function (error, product) {
-  //       Campaign.create({
-  //         id: 2,
-  //         requestedDate: new Date(),
-  //         keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-  //         user: user[0],
-  //         product: product[0],
-  //         paid: false
-  //       }).exec(function (err, workorder) {
-  //         console.log(err)
-  //         workOrderData.forEach(function (dataPoint) {
-  //           WorkOrderData.create({
-  //             campaign: workorder,
-  //             data: dataPoint
-  //           }).exec(function (err) {
-  //             err ? console.log(err) : null
-  //           })
-  //         })
-  //       })
-  //     })
-  //   });
-  // })
-
-  // ok = ok.then(function () {
-  //   return User.find({ username: 'registered2' }).exec(function (err, user) {
-  //     Product.find({}).exec(function (error, product) {
-  //       Campaign.create({
-  //         id: 3,
-  //         requestedDate: new Date(),
-  //         keywords: ['OTHER', 'Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-  //         user: user[0],
-  //         product: product[0],
-  //         paid: false
-  //       }).exec(function (err, workorder) {
-  //         console.log(err)
-  //         workOrderData.forEach(function (dataPoint) {
-  //           WorkOrderData.create({
-  //             campaign: workorder,
-  //             data: dataPoint
-  //           }).exec(function (err) {
-  //             err ? console.log(err) : null
-  //           })
-  //         })
-  //       })
-  //     })
-  //   });
-  // })
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  //permissions
-  ////////////////////////////////////////////////////////////////////////////////////////
-
-  // ok = ok.then(function () {
-  //   return PermissionService.grant({
-  //     role: 'registered',
-  //     model: 'workorder',
-  //     action: 'update',
-  //     criteria: { blacklist: ['keywords', 'assignedUser', 'acceptedDate', 'requestedDate', 'completedDate', 'user', 'product'] }
-  //   })
-  // })
-
-  // ok = ok.then(function () {
-  //   return PermissionService.grant({
-  //     role: 'registered',
-  //     model: 'workorder',
-  //     action: 'read',
-  //     criteria: { 
-  //       blacklist: ['paymentID'] }
-  //   })
-  // })
 
   ok.then(function () {
     done();
