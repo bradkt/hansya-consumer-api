@@ -35,6 +35,5 @@ module.exports = {
                 campaign: campaign.id
             }))
         }))))
-        // var cvs = await(Conversation.find({}).populate('messages'))
     })
 }

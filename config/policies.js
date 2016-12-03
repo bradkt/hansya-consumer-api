@@ -36,7 +36,8 @@ module.exports.policies = {
     'destroy': ['passport','isAssociateOrAdminPolicy']
   },
   CampaignDataController: {
-    '*': ['passport', 'isAssociateOrAdminPolicy']    
+    '*': ['passport', 'isAssociateOrAdminPolicy'] ,
+    'all' : ['passport']
   },
   IndustryController: {
     'create': ['passport', 'isAdminPolicy'],

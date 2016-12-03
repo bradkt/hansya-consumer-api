@@ -12,7 +12,7 @@ describe('CampaignDataController', function () {
         await(Message.destroy({}))
         await(Campaign.destroy({}))
         await(Conversation.destroy({}))
-        var user = await(User.findOne({ username: 'associate' }))
+        var user = await(User.findOne({ username: 'registered' }))
         var products = await(Product.find({}))
         await(Campaign.create({
             id: 'asdfasdf',
@@ -23,7 +23,7 @@ describe('CampaignDataController', function () {
             paid: true,
             paymentID: 'abcd12',
             company: 1,
-            visibility: 'company'
+            visibility: 'user'
         }))
     }))
 
@@ -49,14 +49,25 @@ describe('CampaignDataController', function () {
                 )
             }))
         })
+
+        describe('all', function () {
+            it('should return all information for the campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/all/asdfasdf'))
+                return (expect(res.body.messages.length).to.equal(26) &&
+                    expect(res.body.conversations.length).to.equal(9) &&
+                    expect(res.body.posters.length).to.equal(20))
+            }))
+        })
     })
     describe('RegisteredUsers', function () {
-        before(function () {
+        beforeEach(async(function () {
             request = require('supertest-as-promised').agent(sails.hooks.http.app);
-            return request
+            return await(request
                 .post('/auth/local')
-                .send({ identifier: 'registered@example.com', password: 'registered1234' })
-        })
+                .send({ identifier: 'registered@example.com', password: 'registered1234' }))
+        }))
 
         describe('#upload()', function () {
             it('should reject the data file ', async(function () {
@@ -71,6 +82,24 @@ describe('CampaignDataController', function () {
                     expect(conversations.length).to.equal(0)
                 )
             }))
+            describe('all', function () {
+                beforeEach(async(function () {
+                    request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                    await(request2
+                        .post('/auth/local')
+                        .send({ identifier: 'associate@example.com', password: 'associate1234' }))
+                    var res = await(request2.post('/campaignData/upload') // this will fail if the first test fails
+                        .attach('data', 'test/files/data-demo.json'))
+                    return true
+                }))
+                it('should return all information for the campaign', async(function () {
+                    var res = await(request.get('/campaignData/all/asdfasdf'))
+                    return (expect(res.statusCode).to.equal(200) &&
+                        expect(res.body.messages.length).to.equal(26) &&
+                        expect(res.body.conversations.length).to.equal(9) &&
+                        expect(res.body.posters.length).to.equal(20))
+                }))
+            })
         })
     })
     describe('AdminUsers', function () {

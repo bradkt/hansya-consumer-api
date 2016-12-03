@@ -33,20 +33,19 @@ module.exports = {
                 delete (campaign.paymentID)
                 res.send(campaign)
             }
-            else{
+            else {
                 res.notFound()
             }
         }
-        else{
+        else {
             res.send(campaign)
         }
-        
+
     }),
 
     all: async(function (req, res) {
-        Campaign.find({}).then(function (results) {
-            res.send(results);
-        })
+        var results = await(Campaign.find({}))
+        res.send(results);
     })
 };
 

@@ -22,11 +22,8 @@ _.merge(exports, {
       res.badRequest('Username or Email Address already in use')
     }
     else {
-      sails.services.passport.protocols.local.register(req.body, function (err, user) {
-        if (err) return res.negotiate(err);
-
-        res.created(user);
-      });
+      var user = await(User.register(req.allParams()))
+      res.created(user)
     }
   }),
 

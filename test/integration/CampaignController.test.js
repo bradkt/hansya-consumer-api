@@ -10,7 +10,7 @@ var request
 describe('CampaignController', function () {
     before(async(function () {
         newUser = await(User.register({ email: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 1 }))
-        console.log("Created: "+ newUser)
+        console.log("Created: " + newUser)
     }))
     after(async(function () {
         await(User.destroy({ username: 'newuser' }))
@@ -184,9 +184,9 @@ describe('CampaignController', function () {
                 return (expect(res.body.length).to.equal(2) &&
                     expect(res.statusCode).to.equal(200))
             }))
-            it('should not return the campaigns for the other user that is locked to the user', async(function(){
+            it('should not return the campaigns for the other user that is locked to the user', async(function () {
                 var res = await(request.get('/campaign'))
-                return (expect(res.body.findIndex(function(campaign){campaign.id === 2})).to.equal(-1))                
+                return (expect(res.body.findIndex(function (campaign) { campaign.id === 2 })).to.equal(-1))
             }))
         })
     })
@@ -341,7 +341,7 @@ describe('CampaignController', function () {
             }))
         })
         describe('create', function () {
-            it('should allow me to create a campaign', async(function () {
+            it('should allow me to create a campaign with company level visibility', async(function () {
                 var newCampaign = {
                     id: 1000,
                     requestedDate: new Date(),
@@ -355,6 +355,36 @@ describe('CampaignController', function () {
                 var response = await(request.post('/campaign').send(newCampaign))
                 return (expect(response.statusCode).to.equal(201) &&
                     expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+            }))
+            it('should allow me to create a campaign with user level visibility', async(function () {
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    user: user,
+                    product: products[0],
+                    paid: false,
+                    company: 1,
+                    visibility: 'user'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(201) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+            }))
+            it('should not allow me to create a campaign with any other visibility', async(function () {
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    user: user,
+                    product: products[0],
+                    paid: false,
+                    company: 1,
+                    visibility: 'team'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(400) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(0))
             }))
         })
     })
@@ -380,6 +410,13 @@ describe('CampaignController', function () {
                 var data = await(Campaign.find({}))
                 return (expect(response.body.length).to.equal(4) &&
                     expect(response.statusCode).to.equal(200) &&
+                    expect(data.length).to.equal(4))
+            }))
+
+            it('should return all campaigns regardless of verb & nothing should be deleted', async(function () {
+                var response = await(request.del('/campaign'))
+                var data = await(Campaign.find({}))
+                return (expect(response.statusCode).to.equal(400) &&
                     expect(data.length).to.equal(4))
             }))
         })

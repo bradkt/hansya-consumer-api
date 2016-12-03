@@ -83,6 +83,7 @@ describe('UserController', function () {
                     .post('/user')
                     .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
                 var user = await(User.findOne({ username: 'newuser' }))
+                var users = await(User.find({}))
                 return (expect(res.statusCode).to.equal(201) &&
                     expect(user).to.not.equal(undefined) &&
                     expect(user.username).to.equal('newuser'))
@@ -167,6 +168,20 @@ describe('UserController', function () {
                 return (expect(user.role.name).to.equal('registered') &&
                     expect(res.statusCode).to.equal(201))
             }))
+            it('should keep all atrributes sent', async(function () {
+                request = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var companies = await(Company.find({}))
+                var res = await(request
+                    .post('/user')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: companies[0].id, handler: 'Borne' }))
+                var user = await(User.findOne({ username: 'newuser' }).populate('role'))
+                return (expect(user.role.name).to.equal('registered') &&
+                    expect(res.statusCode).to.equal(201) &&
+                    expect(user.identifier).to.equal('newuser@example.com') &&
+                    expect(user.username).to.equal('newuser') &&
+                    expect(user.company).to.equal(companies[0].id) &&
+                    expect(user.handler).to.equal('Borne'))   
+            }))
 
             it('should not allow 2 users with the same username', async(function () {
                 request = require('supertest-as-promised').agent(sails.hooks.http.app);
@@ -202,6 +217,21 @@ describe('UserController', function () {
                 var user = await(User.findOne({ username: 'newuser' }).populate('role'))
                 return (expect(user.role.name).to.equal('registered') &&
                     expect(res.statusCode).to.equal(201))
+            }))
+
+            it('should keep all atrributes sent', async(function () {
+                request = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var companies = await(Company.find({}))
+                var res = await(request
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: companies[0].id, handler: 'Borne' }))
+                var user = await(User.findOne({ username: 'newuser' }).populate('role'))
+                return (expect(user.role.name).to.equal('registered') &&
+                    expect(res.statusCode).to.equal(201) &&
+                    expect(user.identifier).to.equal('newuser@example.com') &&
+                    expect(user.username).to.equal('newuser') &&
+                    expect(user.company).to.equal(companies[0].id) &&
+                    expect(user.handler).to.equal('Borne'))   
             }))
 
             it('should not allow 2 users with the same username', async(function () {
