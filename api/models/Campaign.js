@@ -8,13 +8,9 @@ module.exports = {
       type: 'string',
       primaryKey: true,
       unique: true,
-      defaultsTo: async(function () {
-        uuid = uuid();
-        while (await(Campaign.findOne({id: uuid}))) {
-          uuid = uuid();
-        }
-        return uuid
-      })
+      defaultsTo: function () {
+        return uuid()
+      }
     },
     requestedDate: {
       type: 'datetime',
