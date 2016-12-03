@@ -48,10 +48,9 @@ module.exports = {
                     sails.log.error(err)
                     res.badRequest();
                 }
-                var campaigns = await(Campaign.find({}))
                 var campaign = await(Campaign.findOne({ id: fileData.meta_data.campaign.campaign_id }))
                 if (!campaign) {
-                    res.notFound('Campaign not found')
+                    res.badRequest('Campaign not found')
                 }
                 try {
                     await(CampaignDataUploadService.createPostersIfNeeded(fileData.users))

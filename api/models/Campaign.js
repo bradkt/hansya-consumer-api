@@ -1,10 +1,20 @@
+var async = require('asyncawait/async')
+var await = require('asyncawait/await')
+var uuid = require('uuid/v4');
 module.exports = {
 
   attributes: {
     id: {
       type: 'string',
       primaryKey: true,
-      unique: true
+      unique: true,
+      defaultsTo: async(function () {
+        uuid = uuid();
+        while (await(Campaign.findOne({id: uuid}))) {
+          uuid = uuid();
+        }
+        return uuid
+      })
     },
     requestedDate: {
       type: 'datetime',

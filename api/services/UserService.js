@@ -4,15 +4,25 @@ var await = require('asyncawait/await')
 module.exports = {
 
     role: async(function (userID) {
-        var userRoles = []
-        var user = await(User.findOne({ id: userID }).populate('role'))
-        return user.role.name
+        try {
+            var userRoles = []
+            var user = await(User.findOne({ id: userID }).populate('role'))
+            return user.role.name
+        }
+        catch (e){
+            return null
+        }
     }),
 
     hasRole: async(function (userID, roleName) {
-        var hasRole = false
-        var userRole = await(this.role(userID))
-        return userRole == roleName
+        try {
+            var hasRole = false
+            var userRole = await(this.role(userID))
+            return userRole == roleName
+        }
+        catch (e){
+            return false
+        }
     }),
 
     assignRole: async(function (userID, roleName) {

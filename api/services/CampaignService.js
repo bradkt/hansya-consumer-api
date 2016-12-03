@@ -13,7 +13,6 @@ module.exports = {
         var index = campaigns.findIndex(function (campaign) {
             return campaign.id == campaignId
         })
-        console.log(index > -1)
         if (index > -1) {
             return true
         }

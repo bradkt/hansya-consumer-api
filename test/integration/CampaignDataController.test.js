@@ -14,17 +14,18 @@ describe('CampaignDataController', function () {
         await(Conversation.destroy({}))
         var user = await(User.findOne({ username: 'registered' }))
         var products = await(Product.find({}))
-        await(Campaign.create({
+        var ret =  await(Campaign.create({
             id: 'asdfasdf',
             requestedDate: new Date(),
             keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-            user: user,
+            user: user.id,
             product: products[0],
             paid: true,
             paymentID: 'abcd12',
-            company: 1,
+            company: user.company,
             visibility: 'user'
         }))
+        return ret
     }))
 
     describe('AssociateUsers', function () {

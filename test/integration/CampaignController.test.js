@@ -10,7 +10,6 @@ var request
 describe('CampaignController', function () {
     before(async(function () {
         newUser = await(User.register({ email: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 1 }))
-        console.log("Created: " + newUser)
     }))
     after(async(function () {
         await(User.destroy({ username: 'newuser' }))
@@ -58,7 +57,7 @@ describe('CampaignController', function () {
             company: 1,
             visibility: 'user'
         }))
-        var otherUser = await(User.findOne({ username: 'registered2' }))
+        otherUser = await(User.findOne({ username: 'registered2' }))
         await(Campaign.create({
             id: 3,
             requestedDate: new Date(),
@@ -70,7 +69,8 @@ describe('CampaignController', function () {
             company: 2,
             visibility: 'company'
         }))
-        var campaign = await(Campaign.findOne({ id: 1 }))
+        var multipleCampaigns = await(Campaign.find({}))
+        var campaign = multipleCampaigns[0]
         posters = [{
             "name": "Jarrett Parker",
             "screen_name": "ParkerJ",
@@ -343,28 +343,35 @@ describe('CampaignController', function () {
         describe('create', function () {
             it('should allow me to create a campaign with company level visibility', async(function () {
                 var newCampaign = {
-                    id: 1000,
-                    requestedDate: new Date(),
-                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-                    user: user,
-                    product: products[0],
+                    keywords: ['this', 'is'],
+                    product: products[1].id,
                     paid: false,
-                    company: 1,
                     visibility: 'company'
                 }
                 var response = await(request.post('/campaign').send(newCampaign))
+                var user = await(User.findOne({ username: 'registered' }))
                 return (expect(response.statusCode).to.equal(201) &&
-                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+                    expect(await(Campaign.find({ user: user.id, product: products[1].id, visibility: 'company' })).length).to.equal(1))
+            }))
+            it('should not allow me to create a campaign for another user', async(function () {
+                var newCampaign = {
+                    id: '42',
+                    keywords: ['this', 'is'],
+                    product: products[1].id,
+                    user: otherUser.id,
+                    paid: false,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(400) &&
+                    expect(await(Campaign.find({ id: '42' })).length).to.equal(0))
             }))
             it('should allow me to create a campaign with user level visibility', async(function () {
                 var newCampaign = {
                     id: 1000,
-                    requestedDate: new Date(),
                     keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-                    user: user,
                     product: products[0],
                     paid: false,
-                    company: 1,
                     visibility: 'user'
                 }
                 var response = await(request.post('/campaign').send(newCampaign))
@@ -374,12 +381,9 @@ describe('CampaignController', function () {
             it('should not allow me to create a campaign with any other visibility', async(function () {
                 var newCampaign = {
                     id: 1000,
-                    requestedDate: new Date(),
                     keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-                    user: user,
                     product: products[0],
                     paid: false,
-                    company: 1,
                     visibility: 'team'
                 }
                 var response = await(request.post('/campaign').send(newCampaign))
@@ -421,7 +425,7 @@ describe('CampaignController', function () {
             }))
         })
 
-        describe('post', function () {
+        describe('put', function () {
             it('should modify the campaign supplied', async(function () {
                 var campaigns = await(request.get('/campaign/all'))
                 var campaign = campaigns.body[0]
@@ -527,15 +531,79 @@ describe('CampaignController', function () {
                     id: 1000,
                     requestedDate: new Date(),
                     keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-                    user: user,
+                    user: user.id,
                     product: products[0],
                     paid: false,
-                    company: 1,
                     visibility: 'company'
                 }
                 var response = await(request.post('/campaign').send(newCampaign))
                 return (expect(response.statusCode).to.equal(201) &&
                     expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+            }))
+
+            it('should deny and inform me that a user must be supplied', async(function () {
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    product: products[0],
+                    paid: false,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(400) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                    expect(response.text).to.equal('A registered user must be supplied'))
+            }))
+
+            it('should deny when creating for an associate', async(function () {
+                var associate = await(User.findOne({ username: 'associate' }))
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    product: products[0],
+                    user: associate.id,
+                    paid: false,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(400) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                    expect(response.text).to.equal('A campaign must be created for a registered user'))
+            }))
+
+            it('should deny when creating for an admin', async(function () {
+                var associate = await(User.findOne({ username: 'admin' }))
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    product: products[0],
+                    user: associate.id,
+                    paid: false,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(400) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                    expect(response.text).to.equal('A campaign must be created for a registered user'))
+            }))
+
+            it('should deny when creating for an unexisting user', async(function () {
+                var newCampaign = {
+                    id: 1000,
+                    requestedDate: new Date(),
+                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                    product: products[0],
+                    user: 'x',
+                    paid: false,
+                    visibility: 'company'
+                }
+                var response = await(request.post('/campaign').send(newCampaign))
+                return (expect(response.statusCode).to.equal(400) &&
+                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                    expect(response.text).to.equal('A campaign must be created for a registered user'))
             }))
         })
     })
@@ -564,7 +632,7 @@ describe('CampaignController', function () {
             }))
         })
     })
-    describe('post', function () {
+    describe('put', function () {
         it('should modify the campaign supplied', async(function () {
             var campaigns = await(request.get('/campaign/all'))
             var campaign = campaigns.body[0]
@@ -670,15 +738,78 @@ describe('CampaignController', function () {
                 id: 1000,
                 requestedDate: new Date(),
                 keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-                user: user,
+                user: user.id,
                 product: products[0],
                 paid: false,
-                company: 1,
                 visibility: 'user'
             }
             var response = await(request.post('/campaign').send(newCampaign))
             return (expect(response.statusCode).to.equal(201) &&
                 expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
+        }))
+        it('should deny and inform me that a user must be supplied', async(function () {
+            var newCampaign = {
+                id: 1000,
+                requestedDate: new Date(),
+                keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                product: products[0],
+                paid: false,
+                visibility: 'company'
+            }
+            var response = await(request.post('/campaign').send(newCampaign))
+            return (expect(response.statusCode).to.equal(400) &&
+                expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                expect(response.text).to.equal('A registered user must be supplied'))
+        }))
+
+        it('should deny when creating for an associate', async(function () {
+            var associate = await(User.findOne({ username: 'associate' }))
+            var newCampaign = {
+                id: 1000,
+                requestedDate: new Date(),
+                keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                product: products[0],
+                user: associate.id,
+                paid: false,
+                visibility: 'company'
+            }
+            var response = await(request.post('/campaign').send(newCampaign))
+            return (expect(response.statusCode).to.equal(400) &&
+                expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                expect(response.text).to.equal('A campaign must be created for a registered user'))
+        }))
+
+        it('should deny when creating for an admin', async(function () {
+            var associate = await(User.findOne({ username: 'admin' }))
+            var newCampaign = {
+                id: 1000,
+                requestedDate: new Date(),
+                keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                product: products[0],
+                user: associate.id,
+                paid: false,
+                visibility: 'company'
+            }
+            var response = await(request.post('/campaign').send(newCampaign))
+            return (expect(response.statusCode).to.equal(400) &&
+                expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                expect(response.text).to.equal('A campaign must be created for a registered user'))
+        }))
+
+        it('should deny when creating for an unexisting user', async(function () {
+            var newCampaign = {
+                id: 1000,
+                requestedDate: new Date(),
+                keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
+                product: products[0],
+                user: 'x',
+                paid: false,
+                visibility: 'company'
+            }
+            var response = await(request.post('/campaign').send(newCampaign))
+            return (expect(response.statusCode).to.equal(400) &&
+                expect(await(Campaign.find({ id: 1000 })).length).to.equal(0) &&
+                expect(response.text).to.equal('A campaign must be created for a registered user'))
         }))
     })
 });

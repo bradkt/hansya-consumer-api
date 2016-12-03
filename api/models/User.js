@@ -29,11 +29,5 @@ _.merge(exports, {
         .then(function(usr){
             next();
         })
-        
-        
-        // var role = await(Role.findOne({name: 'registered'}))
-        // console.log(role.Prototype)
-        // values.role = role
-        // next();
     } 
 })

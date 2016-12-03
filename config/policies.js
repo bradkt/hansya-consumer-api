@@ -31,6 +31,7 @@ module.exports.policies = {
 
   CampaignController: {
     '*': ['passport'],
+    'create': ['passport', 'newCampaignPolicy'],
     'update': ['passport', 'campaignUpdatePolicy'],
     'all': ['passport', 'isAssociateOrAdminPolicy'],
     'destroy': ['passport','isAssociateOrAdminPolicy']
