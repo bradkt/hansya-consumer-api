@@ -1,8 +1,6 @@
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
 
-var Promise = require('bluebird')
-
 module.exports = {
     createPostersIfNeeded: async(function (posters) {
         await(Promise.all(posters.map(async(function (poster) {

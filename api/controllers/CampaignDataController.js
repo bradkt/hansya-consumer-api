@@ -4,37 +4,77 @@ var await = require('asyncawait/await')
 fs = require('fs')
 
 module.exports = {
-    _config: {  //Override default behavior as this is just an upload endpoint
+    _config: {  //Override default behavior as this is not a standard rest API endpoint
         actions: true,
         shortcuts: false,
         rest: false
     },
-    all: async(function (req, res) {
 
-        if (await(UserService.role(req.user.id)) == 'registered') {
-            if (!await(CampaignService.hasAccessToCampaign(req.user.id, req.param('id')))) {
-                res.forbidden();
-            }
-        }
+    all: async(function (req, res) {
         var messages = await(Message.find({ campaign: req.param('id') }).populate('poster'))
         var conversations = await(Conversation.find({ campaign: req.param('id') }).populate('messages'))
-        var posters = []
-        messages.forEach(function (message) {
-            if (posters === []) {
-                posters.push(message.poster)
-            }
-            else {
-                var idx = posters.findIndex(function (poster) {
-                    return poster.id === message.poster.id
-                })
-                if (idx == -1) {
-                    posters.push(message.poster)
-                }
-            }
-
-        })
+        var posters = await(CampaignDataService.parsePosters(messages))
         res.send({ messages: messages, conversations: conversations, posters: posters })
     }),
+
+    locationSummary: async(function (req, res) {
+        var messages = await(Message.find({ campaign: req.param('id') }))
+        // var locations = await(Message.find({campaign: req.param('id') }).groupBy('message.location').sum('_id'))
+        // Message.find({ campaign: req.param('id') }).groupBy('screen_name').sum('id').exec(function (err, results) {
+        //     console.log(results)
+        // })
+        try {
+            Message.native(function (err, collection) {
+                if (err) {
+                    res.serverError(err)
+                }
+                collection.aggregate([
+                    {
+                        $match: {
+                            campaign: req.param('id')
+                        }
+                    },
+                    {
+                        $group: { _id: "$message.location", count: { $sum: 1 } }
+                    }
+                ], function (err, locations) {
+                    if (err) {
+                        res.serverError(err)
+                    }
+                    res.send(locations)
+                })
+
+            })
+        }
+        catch (e){
+            res.serverError('DB Error')
+        }
+
+        // console.log(messages[0].message.location)
+        // res.send(results)
+        // var deferred = Q.defer();
+        // Message.native
+        //     .then(function (collection) {
+        //         collection.aggregate([
+        //             {
+        //                 $match: {
+        //                     campaign: req.param('id')
+        //                 }
+        //             },
+        //             {
+        //                 $group: {
+
+        //                 }
+        //             }
+        //         ])
+        //             .then(function (result) {
+        //                 deferred.resolve(result)
+        //             })
+        //     })
+        //     return deffered.resolve(result)
+
+    }),
+
     upload: function (req, res) {
         req.file('data').upload(function (err, uploadedFiles) {
             var ok = false
