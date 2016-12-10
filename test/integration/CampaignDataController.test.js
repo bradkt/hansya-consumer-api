@@ -68,17 +68,29 @@ describe('CampaignDataController', function () {
                     .attach('data', 'test/files/data-demo.json'))
                 var res = await(request.get('/campaignData/locationSummary/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
-                    expect(res.body).to.deep.equal([{ _id: 'Austin, TX', count: 1 },
-                        { _id: 'Baltimore, MD', count: 3 },
-                        { _id: 'Barboursville, WV', count: 2 },
-                        { _id: 'Bedford, NH', count: 1 },
-                        { _id: 'Addison, TX', count: 3 },
-                        { _id: 'Aiken, SC', count: 1 },
-                        { _id: 'Atlantic City, NJ', count: 2 },
-                        { _id: 'Arlington, VA', count: 1 },
-                        { _id: 'Athens, OH', count: 1 },
-                        { _id: 'Ashwaubenon, WI', count: 2 },
-                        { _id: 'Atlanta, GA', count: 9 }]))
+                    expect(res.body.sort(function (a, b) { return a['_id'].localeCompare(b['_id']) })).to.deep.equal(
+                        [{ _id: 'Addison, TX', count: 3 },
+                            { _id: 'Aiken, SC', count: 1 },
+                            { _id: 'Arlington, VA', count: 1 },
+                            { _id: 'Ashwaubenon, WI', count: 2 },
+                            { _id: 'Athens, OH', count: 1 },
+                            { _id: 'Atlanta, GA', count: 9 },
+                            { _id: 'Atlantic City, NJ', count: 2 },
+                            { _id: 'Austin, TX', count: 1 },
+                            { _id: 'Baltimore, MD', count: 3 },
+                            { _id: 'Barboursville, WV', count: 2 },
+                            { _id: 'Bedford, NH', count: 1 }]
+                    ))
+            }))
+        })
+
+        describe('totalLikes', function () {
+            it('should return the total number of likes for a campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/totalLikes/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({ likes: 4606 }))
             }))
         })
     })
@@ -125,22 +137,47 @@ describe('CampaignDataController', function () {
         })
 
         describe('locationSummary', function () {
-            it('should return the location summary for all messages in the campaign', async(function () {
-                await(request.post('/campaignData/upload') // this will fail if the first test fails
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                await(request2
+                    .post('/auth/local')
+                    .send({ identifier: 'associate@example.com', password: 'associate1234' }))
+                var res = await(request2.post('/campaignData/upload') // this will fail if the first test fails
                     .attach('data', 'test/files/data-demo.json'))
+                return true
+            }))
+            it('should return the location summary for all messages in the campaign', async(function () {
                 var res = await(request.get('/campaignData/locationSummary/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
-                    expect(res.body).to.deep.equal([{ _id: 'Austin, TX', count: 1 },
-                        { _id: 'Baltimore, MD', count: 3 },
-                        { _id: 'Barboursville, WV', count: 2 },
-                        { _id: 'Bedford, NH', count: 1 },
-                        { _id: 'Addison, TX', count: 3 },
-                        { _id: 'Aiken, SC', count: 1 },
-                        { _id: 'Atlantic City, NJ', count: 2 },
-                        { _id: 'Arlington, VA', count: 1 },
-                        { _id: 'Athens, OH', count: 1 },
-                        { _id: 'Ashwaubenon, WI', count: 2 },
-                        { _id: 'Atlanta, GA', count: 9 }]))
+                    expect(res.body.sort(function (a, b) { return a['_id'].localeCompare(b['_id']) })).to.deep.equal(
+                        [{ _id: 'Addison, TX', count: 3 },
+                            { _id: 'Aiken, SC', count: 1 },
+                            { _id: 'Arlington, VA', count: 1 },
+                            { _id: 'Ashwaubenon, WI', count: 2 },
+                            { _id: 'Athens, OH', count: 1 },
+                            { _id: 'Atlanta, GA', count: 9 },
+                            { _id: 'Atlantic City, NJ', count: 2 },
+                            { _id: 'Austin, TX', count: 1 },
+                            { _id: 'Baltimore, MD', count: 3 },
+                            { _id: 'Barboursville, WV', count: 2 },
+                            { _id: 'Bedford, NH', count: 1 }]
+                    ))
+            }))
+        })
+        describe('totalLikes', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                await(request2
+                    .post('/auth/local')
+                    .send({ identifier: 'associate@example.com', password: 'associate1234' }))
+                var res = await(request2.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                return true
+            }))
+            it('should return the total number of likes for a campaign', async(function () {
+                var res = await(request.get('/campaignData/totalLikes/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({ likes: 4606 }))
             }))
         })
     })
@@ -189,17 +226,27 @@ describe('CampaignDataController', function () {
                     .attach('data', 'test/files/data-demo.json'))
                 var res = await(request.get('/campaignData/locationSummary/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
-                    expect(res.body).to.deep.equal([{ _id: 'Austin, TX', count: 1 },
-                        { _id: 'Baltimore, MD', count: 3 },
-                        { _id: 'Barboursville, WV', count: 2 },
-                        { _id: 'Bedford, NH', count: 1 },
-                        { _id: 'Addison, TX', count: 3 },
-                        { _id: 'Aiken, SC', count: 1 },
-                        { _id: 'Atlantic City, NJ', count: 2 },
-                        { _id: 'Arlington, VA', count: 1 },
-                        { _id: 'Athens, OH', count: 1 },
-                        { _id: 'Ashwaubenon, WI', count: 2 },
-                        { _id: 'Atlanta, GA', count: 9 }]))
+                    expect(res.body.sort(function (a, b) { return a['_id'].localeCompare(b['_id']) })).to.deep.equal(
+                        [{ _id: 'Addison, TX', count: 3 },
+                            { _id: 'Aiken, SC', count: 1 },
+                            { _id: 'Arlington, VA', count: 1 },
+                            { _id: 'Ashwaubenon, WI', count: 2 },
+                            { _id: 'Athens, OH', count: 1 },
+                            { _id: 'Atlanta, GA', count: 9 },
+                            { _id: 'Atlantic City, NJ', count: 2 },
+                            { _id: 'Austin, TX', count: 1 },
+                            { _id: 'Baltimore, MD', count: 3 },
+                            { _id: 'Barboursville, WV', count: 2 },
+                            { _id: 'Bedford, NH', count: 1 }]))
+            }))
+        })
+        describe('totalLikes', function () {
+            it('should return the total number of likes for a campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/totalLikes/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({ likes: 4606 }))
             }))
         })
     })

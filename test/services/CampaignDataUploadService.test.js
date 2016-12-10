@@ -189,6 +189,7 @@ describe('CampaignDataUploadService', function () {
         await(Poster.destroy({}))
         await(Message.destroy({}))
         await(Conversation.destroy({}))
+        await(Campaign.destroy({}))
         var user = await(User.findOne({ username: 'associate' }))
         var products = await(Product.find({}))
         await(Campaign.create({
@@ -226,6 +227,7 @@ describe('CampaignDataUploadService', function () {
                 is_ad_clicked: 1,
                 click_time: '2016-03-29 13:17:5,'
             }) &&
+            expect(dbMessages[1].metrics.likes).to.be.a('number') &&
             expect(dbMessages[1].message).to.deep.equal(
                 {
                     mid: '686998660635324416',

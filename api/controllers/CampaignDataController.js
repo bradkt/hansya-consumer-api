@@ -17,62 +17,18 @@ module.exports = {
         res.send({ messages: messages, conversations: conversations, posters: posters })
     }),
 
+    totalLikes: function(req, res){
+        CampaignDataService.totalLikes(req.param('id'), function(err, likes){
+            if(err){res.serverError(err)}
+            res.send(likes)
+        })
+    },
+
     locationSummary: async(function (req, res) {
-        var messages = await(Message.find({ campaign: req.param('id') }))
-        // var locations = await(Message.find({campaign: req.param('id') }).groupBy('message.location').sum('_id'))
-        // Message.find({ campaign: req.param('id') }).groupBy('screen_name').sum('id').exec(function (err, results) {
-        //     console.log(results)
-        // })
-        try {
-            Message.native(function (err, collection) {
-                if (err) {
-                    res.serverError(err)
-                }
-                collection.aggregate([
-                    {
-                        $match: {
-                            campaign: req.param('id')
-                        }
-                    },
-                    {
-                        $group: { _id: "$message.location", count: { $sum: 1 } }
-                    }
-                ], function (err, locations) {
-                    if (err) {
-                        res.serverError(err)
-                    }
-                    res.send(locations)
-                })
-
-            })
-        }
-        catch (e){
-            res.serverError('DB Error')
-        }
-
-        // console.log(messages[0].message.location)
-        // res.send(results)
-        // var deferred = Q.defer();
-        // Message.native
-        //     .then(function (collection) {
-        //         collection.aggregate([
-        //             {
-        //                 $match: {
-        //                     campaign: req.param('id')
-        //                 }
-        //             },
-        //             {
-        //                 $group: {
-
-        //                 }
-        //             }
-        //         ])
-        //             .then(function (result) {
-        //                 deferred.resolve(result)
-        //             })
-        //     })
-        //     return deffered.resolve(result)
-
+        CampaignDataService.locationsOfMessages(req.param('id'), function(err, result){
+            if(err){res.serverError(err)}
+            res.send(result);
+        })
     }),
 
     upload: function (req, res) {
