@@ -51,6 +51,66 @@ describe('UserController', function () {
                 return expect(res.statusCode).to.equal(403)
             }))
         })
+
+        describe('put', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should not allow me to update anything about anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.put('/user/' + user.id).send({ username: 'not allowed' }))
+                var noUser = await(User.findOne({ username: 'not allowed' }))
+                return (expect(res.statusCode).to.equal(403) &&
+                    expect(noUser).to.eql(undefined))
+            }))
+        })
+
+        describe('delete', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should not allow me to delete anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.del('/user/' + user.id).send({ username: 'not allowed' }))
+                var noUser = await(User.findOne({ username: 'not allowed' }))
+                return (expect(res.statusCode).to.equal(403) &&
+                    expect(noUser).to.eql(undefined))
+            }))
+        })
+        describe('changeRole', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+            }))
+            it('should not allow me to change someones role', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }).populate('role'))
+                if (user.role.name != 'registered') {
+                    return expect(user.role.name).to.equal('registered')
+                }
+                var res = await(request.put('/user/changeRole').send({ userID: user.id, role: 'admin' }))
+                return (expect(user.role.name).to.equal('registered') &&
+                    expect(res.statusCode).to.equal(403))
+            }))
+        })
     })
     describe('associate', function () {
         before(async(function () {
@@ -100,6 +160,66 @@ describe('UserController', function () {
                     expect(user.username).to.equal('newuser'))
             }))
         })
+        describe('put', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should not allow me to update anything about anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.put('/user/' + user.id).send({ username: 'not allowed' }))
+                var noUser = await(User.findOne({ username: 'not allowed' }))
+                return (expect(res.statusCode).to.equal(403) &&
+                    expect(noUser).to.eql(undefined))
+            }))
+        })
+
+        describe('delete', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should not allow me to delete anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.del('/user/' + user.id).send({ username: 'not allowed' }))
+                var noUser = await(User.findOne({ username: 'not allowed' }))
+                return (expect(res.statusCode).to.equal(403) &&
+                    expect(noUser).to.eql(undefined))
+            }))
+        })
+        describe('changeRole', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+            }))
+            it('should not allow me to change someones role', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }).populate('role'))
+                if (user.role.name != 'registered') {
+                    return expect(user.role.name).to.equal('registered')
+                }
+                var res = await(request.put('/user/changeRole').send({ userID: user.id, role: 'admin' }))
+                return (expect(user.role.name).to.equal('registered') &&
+                    expect(res.statusCode).to.equal(403))
+            }))
+        })
+
     })
     describe('admin', function () {
         before(async(function () {
@@ -148,6 +268,69 @@ describe('UserController', function () {
                     expect(user.username).to.equal('newuser'))
             }))
         })
+        describe('put', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should allow me to update anything about anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.put('/user/' + user.id).send({ username: 'not allowed' }))
+                var updatedUser = await(User.findOne({ username: 'not allowed' }))
+                var oldUser = await(User.findOne({ username: 'newuser' }))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(updatedUser.username).to.eql('not allowed') &&
+                    expect(updatedUser.id).to.equal(user.id) &&
+                    expect(oldUser).to.equal(undefined))
+            }))
+        })
+
+        describe('delete', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should allow me to delete anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.del('/user/' + user.id))
+                var noUser = await(User.findOne({ username: 'newuser' }))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(noUser).to.eql(undefined))
+            }))
+        })
+        describe('changeRole', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+            }))
+            it('should allow me to change someones role', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }).populate('role'))
+                if (user.role.name != 'registered') {
+                    return expect(user.role.name).to.equal('registered')
+                }
+                var res = await(request.put('/user/changeRole').send({ userID: user.id, role: 'admin' }))
+                var admin = await(User.findOne({ username: 'newuser' }).populate('role'))
+                return (expect(admin.role.name).to.equal('admin') &&
+                    expect(res.statusCode).to.equal(200))
+            }))
+        })
     })
     describe('notLoggedIn', function () {
         describe('get', function () {
@@ -180,7 +363,7 @@ describe('UserController', function () {
                     expect(user.identifier).to.equal('newuser@example.com') &&
                     expect(user.username).to.equal('newuser') &&
                     expect(user.company).to.equal(companies[0].id) &&
-                    expect(user.handler).to.equal('Borne'))   
+                    expect(user.handler).to.equal('Borne'))
             }))
 
             it('should not allow 2 users with the same username', async(function () {
@@ -231,7 +414,7 @@ describe('UserController', function () {
                     expect(user.identifier).to.equal('newuser@example.com') &&
                     expect(user.username).to.equal('newuser') &&
                     expect(user.company).to.equal(companies[0].id) &&
-                    expect(user.handler).to.equal('Borne'))   
+                    expect(user.handler).to.equal('Borne'))
             }))
 
             it('should not allow 2 users with the same username', async(function () {
@@ -256,6 +439,68 @@ describe('UserController', function () {
                     .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'othernewuser', company: 'Target' }))
                 return (expect(res.statusCode).to.equal(400) &&
                     expect(res.text).to.equal('Username or Email Address already in use'))
+            }))
+        })
+        describe('put', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                request = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+                await(User.destroy({ username: 'not allowed' }))
+            }))
+            it('should not allow me to update anything about anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.put('/user/' + user.id).send({ username: 'not allowed' }))
+                var noUser = await(User.findOne({ username: 'not allowed' }))
+                return (expect(res.statusCode).to.equal(403) &&
+                    expect(noUser).to.eql(undefined))
+            }))
+        })
+
+        describe('delete', function () {
+            beforeEach(async(function () {
+                request = require('supertest-as-promised').agent(sails.hooks.http.app);
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+            }))
+            it('should not allow me to delete anyone', async(function () {
+                var user = await(User.findOne({ username: 'newuser' }))
+                var res = await(request.del('/user/' + user.id))
+                var noUser = await(User.findOne({ username: 'newuser' }))
+                return (expect(res.statusCode).to.equal(403) &&
+                    expect(noUser).to.not.eql(undefined))
+            }))
+        })
+
+        describe('changeRole', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var res = await(request2
+                    .post('/register')
+                    .send({ identifier: 'newuser@example.com', password: 'newuser1234', username: 'newuser', company: 'Target' }))
+            }))
+            afterEach(async(function () {
+                await(User.destroy({ username: 'newuser' }))
+            }))
+            it('should not allow me to change someones role', async(function () {
+                request = require('supertest-as-promised').agent(sails.hooks.http.app);
+                var user = await(User.findOne({ username: 'newuser' }).populate('role'))
+                if (user.role.name != 'registered') {
+                    return expect(user.role.name).to.equal('registered')
+                }
+                var res = await(request.put('/user/changeRole').send({ userID: user.id, role: 'admin' }))
+                return (expect(user.role.name).to.equal('registered') &&
+                    expect(res.statusCode).to.equal(403))
             }))
         })
     })

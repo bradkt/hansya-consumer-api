@@ -102,6 +102,23 @@ describe('CampaignDataController', function () {
                     expect(res.body).to.deep.equal({ shares: 5485 }))
             }))
         })
+        describe('engagement', function () {
+            it('should return the total number of shares for a campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/engagement/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({
+                        "averageEngagementRate": 30.192307692307693,
+                        "averageEngagements": 386.9230769230769,
+                        "maximumEngagementRate": 52,
+                        "maximumEngagements": 3219,
+                        "minimumEngagementRate": 18,
+                        "minimumEngagements": 39,
+                        "totalEngagements": 10060
+                    }))
+            }))
+        })
     })
     describe('RegisteredUsers', function () {
         beforeEach(async(function () {
@@ -205,6 +222,30 @@ describe('CampaignDataController', function () {
                     expect(res.body).to.deep.equal({ shares: 5485 }))
             }))
         })
+        describe('engagement', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                await(request2
+                    .post('/auth/local')
+                    .send({ identifier: 'associate@example.com', password: 'associate1234' }))
+                var res = await(request2.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                return true
+            }))
+            it('should return the total number of shares for a campaign', async(function () {
+                var res = await(request.get('/campaignData/engagement/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({
+                        "averageEngagementRate": 30.192307692307693,
+                        "averageEngagements": 386.9230769230769,
+                        "maximumEngagementRate": 52,
+                        "maximumEngagements": 3219,
+                        "minimumEngagementRate": 18,
+                        "minimumEngagements": 39,
+                        "totalEngagements": 10060
+                    }))
+            }))
+        })
     })
     describe('AdminUsers', function () {
         before(function () {
@@ -282,6 +323,23 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/totalShares/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({ shares: 5485 }))
+            }))
+        })
+        describe('engagement', function () {
+            it('should return the total number of shares for a campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/engagement/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({
+                        "averageEngagementRate": 30.192307692307693,
+                        "averageEngagements": 386.9230769230769,
+                        "maximumEngagementRate": 52,
+                        "maximumEngagements": 3219,
+                        "minimumEngagementRate": 18,
+                        "minimumEngagements": 39,
+                        "totalEngagements": 10060
+                    }))
             }))
         })
     })

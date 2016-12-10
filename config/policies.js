@@ -52,7 +52,10 @@ module.exports.policies = {
   },
   UserController: {
     'create': ['passport', 'isNotRegisteredPolicy'],
-    'all': ['passport', 'isAssociateOrAdminPolicy']
+    'all': ['passport', 'isAssociateOrAdminPolicy'],
+    'update' : ['passport', 'isAdminPolicy'],
+    'destroy' : ['passport', 'isAdminPolicy'],
+    'changeRole' : ['passport', 'isAdminPolicy']
   },
 
 

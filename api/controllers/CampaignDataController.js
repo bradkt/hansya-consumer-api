@@ -17,6 +17,13 @@ module.exports = {
         res.send({ messages: messages, conversations: conversations, posters: posters })
     }),
 
+    engagement: function (req, res) {
+        CampaignDataService.engagement(req.param('id'), function (err, engagement) {
+            if (err) { res.serverError(err) }
+            res.send(engagement)
+        })
+    },
+
     locationSummary: async(function (req, res) {
         CampaignDataService.locationsOfMessages(req.param('id'), function (err, result) {
             if (err) { res.serverError(err) }
@@ -30,7 +37,7 @@ module.exports = {
             res.send(likes)
         })
     },
-    
+
     totalShares: function (req, res) {
         CampaignDataService.totalShares(req.param('id'), function (err, shares) {
             if (err) { res.serverError(err) }

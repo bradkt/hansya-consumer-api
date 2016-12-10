@@ -25,6 +25,48 @@ module.exports = {
         return posters
     },
 
+    engagement: function (campaignID, cb) {
+        try {
+            Message.native(function (err, collection) {
+                if (err) { cb(err, null) }
+                collection.aggregate([
+                    { $match: { campaign: campaignID } },
+                    {
+                        $group: {
+                            _id: '',
+                            averageEngagements: { $avg: '$metrics.engagements' },
+                            minimumEngagements: { $min: '$metrics.engagements' },
+                            maximumEngagements: { $max: '$metrics.engagements' },
+                            totalEngagements: { $sum: '$metrics.engagements' },
+                            averageEngagementRate: { $avg: '$metrics.engagement_rate' },
+                            minimumEngagementRate: { $min: '$metrics.engagement_rate' },
+                            maximumEngagementRate: { $max: '$metrics.engagement_rate' }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            averageEngagements: "$averageEngagements",
+                            minimumEngagements: "$minimumEngagements",
+                            maximumEngagements: "$maximumEngagements",
+                            totalEngagements: "$totalEngagements",
+                            averageEngagementRate: "$averageEngagementRate",
+                            minimumEngagementRate: "$minimumEngagementRate",
+                            maximumEngagementRate: "$maximumEngagementRate"
+                        }
+                    }
+                ], function (err, engagement) {
+                    if (err) { cb(err, null) }
+                    cb(null, engagement[0])
+                })
+
+            })
+        }
+        catch (e) {
+            cb(e, null)
+        }
+    },
+
     locationsOfMessages: function (campaignID, cb) {
         try {
             Message.native(function (err, collection) {

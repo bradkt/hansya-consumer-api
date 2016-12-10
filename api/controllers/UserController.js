@@ -30,6 +30,11 @@ _.merge(exports, {
   all: async(function(req, res, next){
     var users = await(User.find({}).populate('role'))
     res.ok(users)
+  }),
+
+  changeRole: async(function(req, res){
+    var user = await(UserService.assignRole(req.param('userID'), req.param('role')))
+    res.send(user)    
   })
 
 });

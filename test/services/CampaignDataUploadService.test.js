@@ -145,7 +145,7 @@ describe('CampaignDataUploadService', function () {
                 "con_id": "194996802353758208",
                 "depth": "2",
                 "is_reply_to": 0,
-                "convo_thread": ['686998660635324416','698674753033392129']
+                "convo_thread": ['686998660635324416', '698674753033392129']
             }
         ]
 
@@ -172,7 +172,7 @@ describe('CampaignDataUploadService', function () {
                 "is_ad_clicked": 1,
                 "click_time": "2016-03-29 13:17:5,"
             },
-                        {
+            {
                 "message_id": "686998660635324415",
                 "sentiment_score": "1",
                 "likes": 71,
@@ -186,10 +186,6 @@ describe('CampaignDataUploadService', function () {
         ]
     })
     beforeEach(async(function () {
-        await(Poster.destroy({}))
-        await(Message.destroy({}))
-        await(Conversation.destroy({}))
-        await(Campaign.destroy({}))
         var user = await(User.findOne({ username: 'associate' }))
         var products = await(Product.find({}))
         await(Campaign.create({
@@ -204,6 +200,13 @@ describe('CampaignDataUploadService', function () {
             visibility: 'company'
         }))
     }))
+    afterEach(async(function () {
+        await(Poster.destroy({}))
+        await(Message.destroy({}))
+        await(Conversation.destroy({}))
+        await(Campaign.destroy({}))
+    }))
+    
     it('should create posters', async(function () {
         await(CampaignDataUploadService.createPostersIfNeeded(posters))
         dbPosters = await(Poster.find({}))
@@ -243,7 +246,7 @@ describe('CampaignDataUploadService', function () {
                 }
             ) &&
             expect(dbMessages[1].poster.screen_name).to.deep.equal('Zack Zerbe') &&
-            expect(dbMessages[1].campaign).to.equal('asdfasdf')) 
+            expect(dbMessages[1].campaign).to.equal('asdfasdf'))
     }))
 
     it('should create conversations', async(function () {
@@ -252,11 +255,11 @@ describe('CampaignDataUploadService', function () {
         await(CampaignDataUploadService.createMessages(messages, metrics, campaigns[0]))
         await(CampaignDataUploadService.createConversations(conversations, campaigns[0]))
         conversations = await(Conversation.find({}).populate('messages'))
-        return (expect(conversations.length).to.equal(2) && 
-                expect(conversations[0].messages.length).to.equal(1) &&
-                expect(conversations[0].messages[0].id).to.equal('686998660635324415')&&
-                expect(conversations[0].id).to.equal('214996802353758208') &&
-                expect(conversations[1].messages.length).to.equal(2) )
+        return (expect(conversations.length).to.equal(2) &&
+            expect(conversations[0].messages.length).to.equal(1) &&
+            expect(conversations[0].messages[0].id).to.equal('686998660635324415') &&
+            expect(conversations[0].id).to.equal('214996802353758208') &&
+            expect(conversations[1].messages.length).to.equal(2))
     }))
 
 })
