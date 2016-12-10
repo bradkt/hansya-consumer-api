@@ -93,6 +93,15 @@ describe('CampaignDataController', function () {
                     expect(res.body).to.deep.equal({ likes: 4606 }))
             }))
         })
+        describe('totalShares', function () {
+            it('should return the total number of shares for a campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/totalShares/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({ shares: 5485 }))
+            }))
+        })
     })
     describe('RegisteredUsers', function () {
         beforeEach(async(function () {
@@ -180,6 +189,22 @@ describe('CampaignDataController', function () {
                     expect(res.body).to.deep.equal({ likes: 4606 }))
             }))
         })
+        describe('totalShares', function () {
+            beforeEach(async(function () {
+                request2 = require('supertest-as-promised').agent(sails.hooks.http.app);
+                await(request2
+                    .post('/auth/local')
+                    .send({ identifier: 'associate@example.com', password: 'associate1234' }))
+                var res = await(request2.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                return true
+            }))
+            it('should return the total number of shares for a campaign', async(function () {
+                var res = await(request.get('/campaignData/totalShares/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({ shares: 5485 }))
+            }))
+        })
     })
     describe('AdminUsers', function () {
         before(function () {
@@ -247,6 +272,16 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/totalLikes/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({ likes: 4606 }))
+            }))
+        })
+
+        describe('totalShares', function () {
+            it('should return the total number of shares for a campaign', async(function () {
+                await(request.post('/campaignData/upload') // this will fail if the first test fails
+                    .attach('data', 'test/files/data-demo.json'))
+                var res = await(request.get('/campaignData/totalShares/asdfasdf'))
+                return (expect(res.statusCode).to.equal(200) &&
+                    expect(res.body).to.deep.equal({ shares: 5485 }))
             }))
         })
     })

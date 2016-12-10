@@ -17,19 +17,26 @@ module.exports = {
         res.send({ messages: messages, conversations: conversations, posters: posters })
     }),
 
-    totalLikes: function(req, res){
-        CampaignDataService.totalLikes(req.param('id'), function(err, likes){
-            if(err){res.serverError(err)}
-            res.send(likes)
-        })
-    },
-
     locationSummary: async(function (req, res) {
-        CampaignDataService.locationsOfMessages(req.param('id'), function(err, result){
-            if(err){res.serverError(err)}
+        CampaignDataService.locationsOfMessages(req.param('id'), function (err, result) {
+            if (err) { res.serverError(err) }
             res.send(result);
         })
     }),
+
+    totalLikes: function (req, res) {
+        CampaignDataService.totalLikes(req.param('id'), function (err, likes) {
+            if (err) { res.serverError(err) }
+            res.send(likes)
+        })
+    },
+    
+    totalShares: function (req, res) {
+        CampaignDataService.totalShares(req.param('id'), function (err, shares) {
+            if (err) { res.serverError(err) }
+            res.send(shares)
+        })
+    },
 
     upload: function (req, res) {
         req.file('data').upload(function (err, uploadedFiles) {

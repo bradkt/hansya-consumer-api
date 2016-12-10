@@ -60,5 +60,24 @@ module.exports = {
         catch (e) {
             cb(e, null)
         }
+    },
+    totalShares: function (campaignID, cb) {
+        try {
+            Message.native(function (err, collection) {
+                if (err) { cb(err, null) }
+                collection.aggregate([
+                    { $match: { campaign: campaignID } },
+                    { $group: { _id: '', shares: { $sum: '$metrics.shares' } } },
+                    { $project: { _id: 0, shares: '$shares' } }
+                ], function (err, shares) {
+                    if (err) { cb(err, null) }
+                    cb(null, shares[0])
+                })
+
+            })
+        }
+        catch (e) {
+            cb(e, null)
+        }
     }
 }
