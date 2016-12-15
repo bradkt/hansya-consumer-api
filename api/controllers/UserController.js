@@ -9,9 +9,10 @@ _.merge(exports, {
 
   // Extend with custom logic here by adding additional fields, methods, etc.
 
-  find: function (req, res, next) {
-    res.ok(req.user);
-  },
+  find: async(function (req, res, next) {
+    var user = await(User.findOne({id: req.user.id}).populate('role'))
+    res.ok(user);
+  }),
 
   create: async(function (req, res, next) {
     var email = req.allParams().identifier
