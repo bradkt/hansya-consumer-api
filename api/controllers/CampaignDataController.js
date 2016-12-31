@@ -17,6 +17,13 @@ module.exports = {
         res.send({ messages: messages, conversations: conversations, posters: posters })
     }),
 
+    conversation: async(function (req, res) {
+        CampaignDataService.conversations(req.param('id'), function (err, result) {
+            if (err) { res.serverError(err.message) }
+            res.send(result)
+        })
+    }),
+
     engagement: function (req, res) {
         CampaignDataService.engagement(req.param('id'), function (err, engagement) {
             if (err) { res.serverError(err) }
@@ -30,6 +37,27 @@ module.exports = {
             res.send(result);
         })
     }),
+
+    message: async(function (req, res) {
+        CampaignDataService.messages(req.param('id'), function (err, result) {
+            if (err) { res.serverError(err.message) }
+            res.send(result)
+        })
+    }),
+
+    poster: function (req, res) {
+        CampaignDataService.posters(req.param('id'), function (err, result) {
+            if (err) { res.serverError(err.message) }
+            res.send(result)
+        })
+    },
+
+    sentiment: function(req, res) {
+        CampaignDataService.sentimentScores(req.param('id'), function(err, scores){
+            if(err) {res.serverError(err.message)}
+            res.send(scores)
+        })
+    },
 
     totalLikes: function (req, res) {
         CampaignDataService.totalLikes(req.param('id'), function (err, likes) {

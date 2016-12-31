@@ -21,11 +21,12 @@ describe('UserController', function () {
 
         describe('get', function () {
             it('should only return my user information', async(function () {
-                var user = await(User.findOne({ username: 'registered' }))
+                var user = await(User.findOne({ username: 'registered' }).populate('role'))
                 var response = await(request.get('/user'))
+                console.log(response.body.id)
                 return (expect(response.statusCode).to.equal(200) &&
                     expect(response.body.username).to.deep.equal(user.username) &&
-                    expect(response.body.role).to.deep.equal(user.role) &&
+                    expect(response.body.role.id).to.equal(user.role.id) &&
                     expect(response.body.id).to.deep.equal(user.id))
             }))
         })
@@ -121,11 +122,11 @@ describe('UserController', function () {
         }))
         describe('get', function () {
             it('should only return my user information', async(function () {
-                var user = await(User.findOne({ username: 'associate' }))
+                var user = await(User.findOne({ username: 'associate' }).populate('role'))
                 var response = await(request.get('/user'))
                 return (expect(response.statusCode).to.equal(200) &&
                     expect(response.body.username).to.deep.equal(user.username) &&
-                    expect(response.body.role).to.deep.equal(user.role) &&
+                    expect(response.body.role.id).to.equal(user.role.id) &&
                     expect(response.body.id).to.deep.equal(user.id))
             }))
         })
@@ -230,11 +231,11 @@ describe('UserController', function () {
         }))
         describe('get', function () {
             it('should only return my user information', async(function () {
-                var user = await(User.findOne({ username: 'admin' }))
+                var user = await(User.findOne({ username: 'admin' }).populate('role'))
                 var response = await(request.get('/user'))
                 return (expect(response.statusCode).to.equal(200) &&
                     expect(response.body.username).to.deep.equal(user.username) &&
-                    expect(response.body.role).to.deep.equal(user.role) &&
+                    expect(response.body.role.id).to.equal(user.role.id) &&
                     expect(response.body.id).to.deep.equal(user.id))
             }))
         })

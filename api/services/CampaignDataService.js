@@ -1,5 +1,3 @@
-
-
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
 
@@ -23,6 +21,10 @@ module.exports = {
             }
         })
         return posters
+    },
+
+    conversations: function (campaignID, cb) {
+        cb(null, await(Conversation.find({ campaign: campaignID }).populate('messages')))
     },
 
     engagement: function (campaignID, cb) {
@@ -73,7 +75,8 @@ module.exports = {
                 if (err) { cb(err, null) }
                 collection.aggregate([
                     { $match: { campaign: campaignID } },
-                    { $group: { _id: "$message.location", count: { $sum: 1 } } }
+                    { $group: { _id: "$message.location", count: { $sum: 1 } } },
+                    { $sort: {'count': -1, '_id': 1}}
                 ], function (err, locations) {
                     if (err) { cb(err, null) }
                     cb(null, locations)
@@ -82,6 +85,46 @@ module.exports = {
             })
         }
         catch (e) { cb(e, null) }
+    },
+
+    messages: function (campaignID, cb) {
+        cb(null, await(Message.find({ campaign: campaignID })))
+    },
+
+    sentimentScores: function (campaignID, cb) {
+        try {
+            Message.native(function (err, collection) {
+                if (err) { cb(err, null) }
+                collection.aggregate([
+                    { $match: { campaign: campaignID } },
+                    {
+                        $group: {
+                            _id: '',
+                            averageSentimentScore: { $avg: '$metrics.sentiment_score' },
+                            maximumSentimentScore: { $max: '$metrics.sentiment_score' },
+                            minimumSentimentScore: { $min: '$metrics.sentiment_score' },
+                            totalSentimentScore: { $sum: '$metrics.sentiment_score' },
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            averageSentimentScore: "$averageSentimentScore",
+                            maximumSentimentScore: "$maximumSentimentScore",
+                            minimumSentimentScore: "$minimumSentimentScore",
+                            totalSentimentScore: "$totalSentimentScore",
+                        }
+                    }
+                ], function (err, scores) {
+                    if (err) { cb(err, null) }
+                    cb(null, scores[0])
+                })
+
+            })
+        }
+        catch (e) {
+            cb(e, null)
+        }
     },
 
     totalLikes: function (campaignID, cb) {
@@ -103,6 +146,21 @@ module.exports = {
             cb(e, null)
         }
     },
+
+    posters: async(function (campaignID, cb) {
+        try {
+            Message.native(async(function (err, collection) {
+                if (err) { cb(err, null) }
+                var posterIDs = await(collection.distinct('poster', { campaign: campaignID }))
+                var posters = await(Poster.find({ id: posterIDs }))
+                cb(null, posters)
+            }))
+        }
+        catch (e) {
+            cb(e, null)
+        }
+    }),
+
     totalShares: function (campaignID, cb) {
         try {
             Message.native(function (err, collection) {
@@ -115,7 +173,6 @@ module.exports = {
                     if (err) { cb(err, null) }
                     cb(null, shares[0])
                 })
-
             })
         }
         catch (e) {

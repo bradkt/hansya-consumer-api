@@ -186,6 +186,10 @@ describe('CampaignDataUploadService', function () {
         ]
     })
     beforeEach(async(function () {
+        await(Poster.destroy({}))
+        await(Message.destroy({}))
+        await(Conversation.destroy({}))
+        await(Campaign.destroy({}))
         var user = await(User.findOne({ username: 'associate' }))
         var products = await(Product.find({}))
         await(Campaign.create({
@@ -199,14 +203,16 @@ describe('CampaignDataUploadService', function () {
             company: 1,
             visibility: 'company'
         }))
+        return true
     }))
     afterEach(async(function () {
         await(Poster.destroy({}))
         await(Message.destroy({}))
         await(Conversation.destroy({}))
         await(Campaign.destroy({}))
+        return true
     }))
-    
+
     it('should create posters', async(function () {
         await(CampaignDataUploadService.createPostersIfNeeded(posters))
         dbPosters = await(Poster.find({}))

@@ -65,10 +65,15 @@ module.exports.connections = {
   //   database: 'your_mongo_db_name_here' //optional
   // },
 
-   test: {
+  test: {
     adapter: 'sails-mongo',
     url: 'mongodb://consumerapi:Password1@ds063536.mlab.com:63536/hansya-dev1'
   },
+
+  testLocal: {
+    adapter: 'sails-mongo',
+    url: 'mongodb://localhost:27017'  
+},
 
   /***************************************************************************
   *                                                                          *

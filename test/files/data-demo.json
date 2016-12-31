@@ -235,7 +235,7 @@
   "metrics": [
     {
       "message_id": "714996802353758208",
-      "sentiment_score": ".4",
+      "sentiment_score": 0.4,
       "likes": 8,
       "shares": 9,
       "impressions": 110,
@@ -246,7 +246,7 @@
     },
     {
       "message_id": "741438490576072704",
-      "sentiment_score": ".3",
+      "sentiment_score": 0.3,
       "likes": 11,
       "shares": 19,
       "impressions": 100,
@@ -257,7 +257,7 @@
     },
     {
       "message_id": "716087721714790400",
-      "sentiment_score": ".4",
+      "sentiment_score": 0.4,
       "likes": 28,
       "shares": 29,
       "impressions": 220,
@@ -268,7 +268,7 @@
     },
     {
       "message_id": "695043806324989952",
-      "sentiment_score": ".6",
+      "sentiment_score": 0.6,
       "likes": 38,
       "shares": 39,
       "impressions": 30,
@@ -279,7 +279,7 @@
     },
     {
       "message_id": "721116795332075520",
-      "sentiment_score": ".9",
+      "sentiment_score": 0.9,
       "likes": 48,
       "shares": 49,
       "impressions": 440,
@@ -290,7 +290,7 @@
     },
     {
       "message_id": "697907668191735809",
-      "sentiment_score": ".2",
+      "sentiment_score": 0.2,
       "likes": 58,
       "shares": 59,
       "impressions": 50,
@@ -301,7 +301,7 @@
     },
     {
       "message_id": "766510720066260992",
-      "sentiment_score": ".4",
+      "sentiment_score": 0.4,
       "likes": 78,
       "shares": 79,
       "impressions": 710,
@@ -312,7 +312,7 @@
     },
     {
       "message_id": "764239726312390657",
-      "sentiment_score": ".8",
+      "sentiment_score": 0.8,
       "likes": 88,
       "shares": 89,
       "impressions": 180,
@@ -323,7 +323,7 @@
     },
     {
       "message_id": "751094384117084160",
-      "sentiment_score": ".1",
+      "sentiment_score": 0.1,
       "likes": 98,
       "shares": 99,
       "impressions": 90,
@@ -334,7 +334,7 @@
     },
     {
       "message_id": "732978754851639296",
-      "sentiment_score": ".9",
+      "sentiment_score": 0.9,
       "likes": 41,
       "shares": 42,
       "impressions": 440,
@@ -345,7 +345,7 @@
     },
     {
       "message_id": "726850698206392320",
-      "sentiment_score": ".7",
+      "sentiment_score": 0.7,
       "likes": 51,
       "shares": 53,
       "impressions": 550,
@@ -356,7 +356,7 @@
     },
     {
       "message_id": "720397327567990784",
-      "sentiment_score": ".3",
+      "sentiment_score": 0.3,
       "likes": 70,
       "shares": 80,
       "impressions": 529,
@@ -367,7 +367,7 @@
     },
     {
       "message_id": "705469503396823045",
-      "sentiment_score": ".8",
+      "sentiment_score": 0.8,
       "likes": 71,
       "shares": 82,
       "impressions": 620,
@@ -378,7 +378,7 @@
     },
     {
       "message_id": "699664860670488576",
-      "sentiment_score": ".7",
+      "sentiment_score": 0.7,
       "likes": 220,
       "shares": 809,
       "impressions": 1510,
@@ -389,7 +389,7 @@
     },
     {
       "message_id": "683420798921605125",
-      "sentiment_score": ".2",
+      "sentiment_score": 0.2,
       "likes": 168,
       "shares": 189,
       "impressions": 11010,
@@ -400,7 +400,7 @@
     },
     {
       "message_id": "683416627698876417",
-      "sentiment_score": ".3",
+      "sentiment_score": 0.3,
       "likes": 268,
       "shares": 289,
       "impressions": 2010,
@@ -411,7 +411,7 @@
     },
     {
       "message_id": "763550065713614848",
-      "sentiment_score": ".9",
+      "sentiment_score": 0.9,
       "likes": 368,
       "shares": 389,
       "impressions": 3010,
@@ -422,7 +422,7 @@
     },
     {
       "message_id": "201615822456889311",
-      "sentiment_score": ".4",
+      "sentiment_score": 0.4,
       "likes": 145,
       "shares": 459,
       "impressions": 2055,
@@ -433,7 +433,7 @@
     },
     {
       "message_id": "701615822456889346",
-      "sentiment_score": ".7",
+      "sentiment_score": 0.7,
       "likes": 158,
       "shares": 19,
       "impressions": 110,
@@ -444,7 +444,7 @@
     },
     {
       "message_id": "734913559960899585",
-      "sentiment_score": ".6",
+      "sentiment_score": 0.6,
       "likes": 8,
       "shares": 19,
       "impressions": 110,
@@ -455,7 +455,7 @@
     },
     {
       "message_id": "768999648002449408",
-      "sentiment_score": ".4",
+      "sentiment_score": 0.4,
       "likes": 88,
       "shares": 99,
       "impressions": 1110,
@@ -466,7 +466,7 @@
     },
     {
       "message_id": "740324529231138817",
-      "sentiment_score": ".5",
+      "sentiment_score": 0.5,
       "likes": 12,
       "shares": 45,
       "impressions": 256,
@@ -477,7 +477,7 @@
     },
     {
       "message_id": "701064155650981890",
-      "sentiment_score": ".0",
+      "sentiment_score": 0.0,
       "likes": 16,
       "shares": 33,
       "impressions": 157,
@@ -488,7 +488,7 @@
     },
     {
       "message_id": "698918198608031748",
-      "sentiment_score": ".1",
+      "sentiment_score": 0.1,
       "likes": 628,
       "shares": 829,
       "impressions": 10120,
@@ -499,7 +499,7 @@
     },
     {
       "message_id": "698674753033392129",
-      "sentiment_score": ".5",
+      "sentiment_score": 0.5,
       "likes": 1768,
       "shares": 1489,
       "impressions": 11710,
@@ -510,7 +510,7 @@
     },
     {
       "message_id": "686998660635324416",
-      "sentiment_score": "1",
+      "sentiment_score": 1,
       "likes": 71,
       "shares": 89,
       "impressions": 1010,

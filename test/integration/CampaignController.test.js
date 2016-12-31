@@ -717,9 +717,9 @@ describe('CampaignController', function () {
             var campaigns = await(request.get('/campaign/all'))
             var campaign = campaigns.body[0]
             var response = await(request.put('/campaign/' + campaign.id)
-                .send({ product: 88 }))
+                .send({ product: '88' }))
             var campaignAfter = await(Campaign.findOne({ id: 1 }))
-            return (expect(campaignAfter.product).to.equal(88) &&
+            return (expect(campaignAfter.product).to.equal('88') &&
                 expect(response.statusCode).to.equal(200))
         }))
     })
