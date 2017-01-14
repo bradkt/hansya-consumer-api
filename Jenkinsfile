@@ -1,1 +1,3 @@
-npm run test
+node{
+  sh 'npm run test'
+}
