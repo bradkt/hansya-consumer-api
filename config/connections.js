@@ -72,8 +72,8 @@ module.exports.connections = {
 
   testLocal: {
     adapter: 'sails-mongo',
-    url: 'mongodb://localhost:27017'  
-},
+    url: 'mongodb://localhost:27017'
+  },
 
   /***************************************************************************
   *                                                                          *

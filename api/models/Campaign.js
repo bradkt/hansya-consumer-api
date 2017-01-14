@@ -49,7 +49,7 @@ module.exports = {
     },
     company: {
       model: 'company',
-      required: true
+      required: false
     },
     visibility: {
       required: true,

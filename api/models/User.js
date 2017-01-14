@@ -20,7 +20,8 @@ _.merge(exports, {
             model: 'role'
         },
         company: {
-            model: 'company'
+            model: 'company',
+            required: false,
         }
     },
 
