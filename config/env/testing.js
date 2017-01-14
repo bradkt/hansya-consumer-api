@@ -30,6 +30,8 @@ module.exports = {
     db: 0,
     pass: 'Password1',
     prefix: 'sess:'
-  }
+  },
+
+  port: 1337
 
 };
