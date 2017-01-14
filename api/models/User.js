@@ -33,7 +33,9 @@ _.merge(exports, {
         await(_user.save())
         ////////////////////////////////////////////////////////
         //send email to user
-        await(EmailService.sendEmail('hansyaTest@gmail.com', 'westlake_m@yahoo.com', 'appTest', 'ApplicationTest'))
+        if (sails.environment === 'production' || sails.environment == 'testing'){
+            await(EmailService.sendEmail('hansyaTest@gmail.com', _user.email, 'Thank You from Hansya', '<h1> Thank you for registering</h1>'))
+        }
         next();
     })
 })
