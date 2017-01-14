@@ -46,15 +46,15 @@ module.exports = {
     },
     paymentID: { //this will be the authorize.net confirmation ID
       type: 'string'
-    },
-    company: {
-      model: 'company',
-      required: true
-    },
-    visibility: {
-      required: true,
-      enum: ['user', 'company']
     }
+    // company: {
+    //   model: 'company',
+    //   required: false
+    // },
+    // visibility: {
+    //   required: false,
+    //   enum: ['user', 'company']
+    // }
   }
 };
 

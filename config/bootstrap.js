@@ -77,23 +77,25 @@ module.exports.bootstrap = function (done) {
       email: 'registered@example.com',
       username: 'registered',
       password: 'registered1234',
-      company: 1
+      role: '1'
     },
     {
       email: 'registered2@example.com',
       username: 'registered2',
       password: 'registered21234',
-      company: 2
+      role: '1'
     },
     {
       email: 'associate@example.com',
       username: 'associate',
-      password: 'associate1234'
+      password: 'associate1234',
+      role: '2'
     },
     {
       email: 'admin@example.com',
       username: 'admin',
-      password: 'admin1234'
+      password: 'admin1234',
+      role: '3'
     }
   ]
 
@@ -106,15 +108,15 @@ module.exports.bootstrap = function (done) {
   })
 
   ok = ok.then(function () {
-    return Role.create({ name: 'registered' })
+    return Role.create({ name: 'registered', id: '1' })
   })
 
   ok = ok.then(function () {
-    return Role.create({ name: 'associate' })
+    return Role.create({ name: 'associate', id: '2' })
   })
 
   ok = ok.then(function () {
-    return Role.create({ name: 'admin' })
+    return Role.create({ name: 'admin', id: '3' })
   })
 
   ok = ok.then(function () {

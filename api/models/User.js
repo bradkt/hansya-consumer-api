@@ -33,7 +33,7 @@ _.merge(exports, {
         await(_user.save())
         ////////////////////////////////////////////////////////
         //send email to user
-        EmailService.sendEmail('hansyaTest@gmail.com', 'westlake_m@yahoo.com', 'appTest', 'ApplicationTest')
+        await(EmailService.sendEmail('hansyaTest@gmail.com', 'westlake_m@yahoo.com', 'appTest', 'ApplicationTest'))
         next();
     })
 })

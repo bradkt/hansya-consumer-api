@@ -32,5 +32,5 @@ module.exports = {
     prefix: 'sess:'
   },
 
-  emailServer = 'localhost:3000'
+  emailServer: 'http://localhost:3000'
 };

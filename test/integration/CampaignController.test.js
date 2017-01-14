@@ -31,9 +31,7 @@ describe('CampaignController', function () {
             user: user,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12',
-            company: 1,
-            visibility: 'company'
+            paymentID: 'abcd12'
         }))
         await(Campaign.create({
             id: 2,
@@ -42,9 +40,7 @@ describe('CampaignController', function () {
             user: user,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12',
-            company: 1,
-            visibility: 'user'
+            paymentID: 'abcd12'
         }))
         await(Campaign.create({
             id: 4,
@@ -53,9 +49,7 @@ describe('CampaignController', function () {
             user: newUser,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12',
-            company: 1,
-            visibility: 'user'
+            paymentID: 'abcd12'
         }))
         otherUser = await(User.findOne({ username: 'registered2' }))
         await(Campaign.create({
@@ -65,9 +59,7 @@ describe('CampaignController', function () {
             user: otherUser,
             product: products[0],
             paid: true,
-            paymentID: 'abcd12',
-            company: 2,
-            visibility: 'company'
+            paymentID: 'abcd12'
         }))
         var multipleCampaigns = await(Campaign.find({}))
         var campaign = multipleCampaigns[0]
@@ -181,7 +173,7 @@ describe('CampaignController', function () {
         describe('#get', function () {
             it('should return all the campaigns for the registered user', async(function () {
                 var res = await(request.get('/campaign'))
-                return (expect(res.body.length).to.equal(2) &&
+                return (expect(res.body.length).to.equal(1) &&
                     expect(res.statusCode).to.equal(200))
             }))
             it('should not return the campaigns for the other user that is locked to the user', async(function () {
@@ -377,18 +369,6 @@ describe('CampaignController', function () {
                 var response = await(request.post('/campaign').send(newCampaign))
                 return (expect(response.statusCode).to.equal(201) &&
                     expect(await(Campaign.find({ id: 1000 })).length).to.equal(1))
-            }))
-            it('should not allow me to create a campaign with any other visibility', async(function () {
-                var newCampaign = {
-                    id: 1000,
-                    keywords: ['Merge Industry and', 'Whatever', 'Else', 'Is', 'Added'],
-                    product: products[0],
-                    paid: false,
-                    visibility: 'team'
-                }
-                var response = await(request.post('/campaign').send(newCampaign))
-                return (expect(response.statusCode).to.equal(400) &&
-                    expect(await(Campaign.find({ id: 1000 })).length).to.equal(0))
             }))
         })
     })
