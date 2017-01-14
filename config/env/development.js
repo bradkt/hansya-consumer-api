@@ -30,6 +30,7 @@ module.exports = {
     db: 0,
     pass: 'Password1',
     prefix: 'sess:'
-  }
+  },
 
+  emailServer = 'localhost:3000'
 };

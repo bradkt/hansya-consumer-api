@@ -25,19 +25,15 @@ _.merge(exports, {
         }
     },
 
-    afterCreate: function setRole(user, next) {
-        User.findOne(user.id)
-            .populate('role')
-            .then(function (_user) {
-                user = _user;
-                return Role.findOne({ name: 'registered' })
-            })
-            .then(function (role) {
-                user.role = role.id
-                return user.save()
-            })
-            .then(function (usr) {
-                next();
-            })
-    }
+    afterCreate: async(function (user, next) {
+        //Add registered role to user
+        _user = await(User.findOne(user.id).populate('role'))
+        role = await(Role.findOne({ name: 'registered' }))
+        _user.role = role.id
+        await(_user.save())
+        ////////////////////////////////////////////////////////
+        //send email to user
+        EmailService.sendEmail('hansyaTest@gmail.com', 'westlake_m@yahoo.com', 'appTest', 'ApplicationTest')
+        next();
+    })
 })

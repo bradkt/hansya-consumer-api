@@ -22,4 +22,6 @@ module.exports = {
     migrate: 'drop'
   },
 
+  emailServer: 'http://localhost:3000'
+
 };

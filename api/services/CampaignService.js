@@ -5,7 +5,7 @@ module.exports = {
 
     getCampaignsForUser: async(function (userId) {
         var user = await(User.findOne({id: userId}))
-        var campaigns = await(Campaign.find({ or: [{ user: userId }, { company: user.company, visibility: 'company' }] }))
+        var campaigns = await(Campaign.find({ or: [{ user: userId }, { company: user.company, visibility: 'company' }], company: {'!=': [undefined, null, 'undefined']} }))
         return campaigns
     }),
 
