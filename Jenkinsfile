@@ -8,7 +8,7 @@ node{
   sh 'git push heroku master'
   stage 'Turn off dyno instance'
   sh 'heroku ps:scale web=0 -a dev-hansya-consumer-api'
-  stage 'Run CI tests on heroku
+  stage 'Run CI tests on heroku'
   sh 'heroku run --exit-code "npm install && npm run test" -a dev-hansya-consumer-api'
   stage 'Deploy to Test'
   sh 'heroku git:remote -a test-hansya-consumer-api'
