@@ -224,8 +224,19 @@ describe('CampaignDataUploadService', function () {
         await(CampaignDataUploadService.createPostersIfNeeded(posters))
         await(CampaignDataUploadService.createMessages(messages, metrics, campaigns[0]))
         dbMessages = await(Message.find({}).populate('poster'))
+        var index = dbMessages.indexOf({
+            message_id: '686998660635324416',
+            sentiment_score: '1',
+            likes: 71,
+            shares: 89,
+            impressions: 1010,
+            engagements: 529,
+            engagement_rate: 52,
+            is_ad_clicked: 1,
+            click_time: '2016-03-29 13:17:5,'
+        })
         return (expect(dbMessages.length).to.equal(3) &&
-            expect(dbMessages[1].metrics).to.deep.equal({
+            expect(dbMessages[index].metrics).to.deep.equal({
                 message_id: '686998660635324416',
                 sentiment_score: '1',
                 likes: 71,
@@ -236,8 +247,8 @@ describe('CampaignDataUploadService', function () {
                 is_ad_clicked: 1,
                 click_time: '2016-03-29 13:17:5,'
             }) &&
-            expect(dbMessages[1].metrics.likes).to.be.a('number') &&
-            expect(dbMessages[1].message).to.deep.equal(
+            expect(dbMessages[index].metrics.likes).to.be.a('number') &&
+            expect(dbMessages[index].message).to.deep.equal(
                 {
                     mid: '686998660635324416',
                     device: 'ios',
@@ -251,8 +262,8 @@ describe('CampaignDataUploadService', function () {
                     is_ad_link: 0
                 }
             ) &&
-            expect(dbMessages[1].poster.screen_name).to.deep.equal('Zack Zerbe') &&
-            expect(dbMessages[1].campaign).to.equal('asdfasdf'))
+            expect(dbMessages[index].poster.screen_name).to.deep.equal('Zack Zerbe') &&
+            expect(dbMessages[index].campaign).to.equal('asdfasdf'))
     }))
 
     it('should create conversations', async(function () {
@@ -265,7 +276,7 @@ describe('CampaignDataUploadService', function () {
             expect(conversations[0].messages.length).to.equal(1) &&
             expect(conversations[0].messages[0].id).to.equal('686998660635324415') &&
             expect(conversations[0].id).to.equal('214996802353758208') &&
-            expect(conversations[1].messages.length).to.equal(2))
+            expect(conversations[1].messages.length).to.equal(8))
     }))
 
 })
