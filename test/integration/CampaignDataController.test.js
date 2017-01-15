@@ -126,7 +126,7 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/sentiment/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({
-                        "averageSentimentScore": 0.5038461538461538,
+                        "averageSentimentScore": 0.5038,
                         "maximumSentimentScore": 1,
                         "minimumSentimentScore": 0,
                         "totalSentimentScore": 13.1
@@ -150,8 +150,8 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/engagement/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({
-                        "averageEngagementRate": 30.192307692307693,
-                        "averageEngagements": 386.9230769230769,
+                        "averageEngagementRate": 30.1923,
+                        "averageEngagements": 386.9231,
                         "maximumEngagementRate": 52,
                         "maximumEngagements": 3219,
                         "minimumEngagementRate": 18,
@@ -315,7 +315,7 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/sentiment/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({
-                        "averageSentimentScore": 0.5038461538461538,
+                        "averageSentimentScore": 0.5038,
                         "maximumSentimentScore": 1,
                         "minimumSentimentScore": 0,
                         "totalSentimentScore": 13.1
@@ -352,8 +352,8 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/engagement/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({
-                        "averageEngagementRate": 30.192307692307693,
-                        "averageEngagements": 386.9230769230769,
+                        "averageEngagementRate": 30.1923,
+                        "averageEngagements": 386.9231,
                         "maximumEngagementRate": 52,
                         "maximumEngagements": 3219,
                         "minimumEngagementRate": 18,
@@ -464,7 +464,7 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/sentiment/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({
-                        "averageSentimentScore": 0.5038461538461538,
+                        "averageSentimentScore": 0.5038,
                         "maximumSentimentScore": 1,
                         "minimumSentimentScore": 0,
                         "totalSentimentScore": 13.1
@@ -488,8 +488,8 @@ describe('CampaignDataController', function () {
                 var res = await(request.get('/campaignData/engagement/asdfasdf'))
                 return (expect(res.statusCode).to.equal(200) &&
                     expect(res.body).to.deep.equal({
-                        "averageEngagementRate": 30.192307692307693,
-                        "averageEngagements": 386.9230769230769,
+                        "averageEngagementRate": 30.1923,
+                        "averageEngagements": 386.9231,
                         "maximumEngagementRate": 52,
                         "maximumEngagements": 3219,
                         "minimumEngagementRate": 18,

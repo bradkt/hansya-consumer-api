@@ -1,5 +1,6 @@
 var async = require('asyncawait/async')
 var await = require('asyncawait/await')
+var round = require('mongo-round');
 
 var Promise = require('bluebird')
 
@@ -48,11 +49,11 @@ module.exports = {
                     {
                         $project: {
                             _id: 0,
-                            averageEngagements: "$averageEngagements",
+                            averageEngagements: round("$averageEngagements",4),
                             minimumEngagements: "$minimumEngagements",
                             maximumEngagements: "$maximumEngagements",
                             totalEngagements: "$totalEngagements",
-                            averageEngagementRate: "$averageEngagementRate",
+                            averageEngagementRate: round("$averageEngagementRate",4),
                             minimumEngagementRate: "$minimumEngagementRate",
                             maximumEngagementRate: "$maximumEngagementRate"
                         }
@@ -109,10 +110,10 @@ module.exports = {
                     {
                         $project: {
                             _id: 0,
-                            averageSentimentScore: "$averageSentimentScore",
-                            maximumSentimentScore: "$maximumSentimentScore",
-                            minimumSentimentScore: "$minimumSentimentScore",
-                            totalSentimentScore: "$totalSentimentScore",
+                            averageSentimentScore: round("$averageSentimentScore",4),
+                            maximumSentimentScore: round("$maximumSentimentScore",4),
+                            minimumSentimentScore: round("$minimumSentimentScore",4),
+                            totalSentimentScore: round("$totalSentimentScore",4)
                         }
                     }
                 ], function (err, scores) {
