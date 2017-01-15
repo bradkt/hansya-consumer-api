@@ -65,9 +65,39 @@ module.exports.connections = {
   //   database: 'your_mongo_db_name_here' //optional
   // },
 
-  test: {
+  testDatabase: {
     adapter: 'sails-mongo',
-    url: 'mongodb://consumerapi:Password1@ds063536.mlab.com:63536/hansya-dev1'
+    url: 'mongodb://application:Ex7Av2As@ds111589.mlab.com:11589/heroku_d626gvkg'
+  },
+
+  testRedis: {
+    adapter: 'redis',
+    host: 'redis-19847.c10.us-east-1-3.ec2.cloud.redislabs.com',
+    port: 19847,
+    ttl: 300,
+    db: 0,
+    pass: 'HL73cFPCczzn6xXR',
+    prefix: 'sess:'
+  },
+
+  productionRedis: {
+    adapter: 'redis',
+    host: 'TODO',
+    port: 0000,
+    ttl: 300,
+    db: 0,
+    pass: 'TODO',
+    prefix: 'sess:'
+  },
+
+  productionDatabase: {
+    adapter: 'sails-mongo',
+    url: 'TBD when we setup a production database'
+  },
+
+  ciDatabase: {
+    adapter: 'sails-mongo',
+    url: 'mongodb://application:Ex7Av2As@ds111529.mlab.com:11529/heroku_qmkgkwd5'
   },
 
   testLocal: {

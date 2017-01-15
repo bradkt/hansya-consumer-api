@@ -18,19 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'localDiskDb',
+    connection: 'test',
     migrate: 'drop'
-  },
-
-  session: {
-    adapter: 'redis',
-    host: 'redis-10074.c10.us-east-1-2.ec2.cloud.redislabs.com',
-    port: 10074,
-    ttl: 300,
-    db: 0,
-    pass: 'Password1',
-    prefix: 'sess:'
-  },
-
-  emailServer: 'http://localhost:3000'
+  }
 };

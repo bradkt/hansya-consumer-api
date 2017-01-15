@@ -34,7 +34,7 @@
     "debug": "node debug app.js",
     "start": "node app.js",
     "testDev": "node ./node_modules/mocha/bin/mocha --slow 0 test/bootstrap.test.js $(find . -path './test/**/*' ! -name '*CampaignDataController*')",
-    "test": "NODE_ENV=testing node ./node_modules/mocha/bin/mocha --slow 0 test/bootstrap.test.js test/**/*.test.js",
+    "test": "node ./node_modules/mocha/bin/mocha --slow 0 test/bootstrap.test.js test/**/*.test.js",
     "testLocal": "NODE_ENV=testLocal node ./node_modules/mocha/bin/mocha --slow 0 test/bootstrap.test.js test/**/*.test.js"
   },
   "main": "app.js",

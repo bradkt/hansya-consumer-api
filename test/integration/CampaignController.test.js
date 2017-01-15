@@ -316,7 +316,7 @@ describe('CampaignController', function () {
                 var campaigns = await(request.get('/campaign'))
                 var campaign = campaigns.body[0]
                 var response = await(request.put('/campaign/' + campaign.id)
-                    .send({ product: 88 }))
+                    .send({ product: '88' }))
                 var campaignAfter = await(Campaign.findOne({ id: 1 }))
                 return (expect(campaignAfter.product).to.deep.equal(campaign.product) &&
                     expect(response.statusCode).to.equal(403))

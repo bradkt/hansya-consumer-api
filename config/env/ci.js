@@ -18,11 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'testDatabase',
-    migrate: 'safe'
-  },
-
-  session: {
-    connection: 'testRedis'
+    connection: 'ciDatabase',
+    migrate: 'drop'
   }
 };
