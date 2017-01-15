@@ -8,6 +8,8 @@ var request
 describe('CampaignDataController', function () {
 
     beforeEach(async(function () {
+        console.log('connection')
+        console.log(sails.config.models.connection)
         await(Poster.destroy({}))
         await(Message.destroy({}))
         await(Campaign.destroy({}))
