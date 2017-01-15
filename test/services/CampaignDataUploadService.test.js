@@ -272,6 +272,7 @@ describe('CampaignDataUploadService', function () {
         await(CampaignDataUploadService.createMessages(messages, metrics, campaigns[0]))
         await(CampaignDataUploadService.createConversations(conversations, campaigns[0]))
         conversations = await(Conversation.find({}).populate('messages'))
+        console.log(conversations[1].messages.length)
         return (expect(conversations.length).to.equal(2) &&
             expect(conversations[0].messages.length).to.equal(1) &&
             expect(conversations[0].messages[0].id).to.equal('686998660635324415') &&
