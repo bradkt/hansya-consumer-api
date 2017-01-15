@@ -1,6 +1,6 @@
 node{
   stage 'Checkout'
-  sh 'checkout master'
+  sh 'git checkout master'
   stage 'Deploy to dev heroku'
   sh 'heroku config:set NPM_CONFIG_PRODUCTION=false -a dev-hansya-consumer-api'
   sh 'heroku config:set NODE_ENV=ci -a dev-hansya-consumer-api'
