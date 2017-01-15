@@ -20,8 +20,6 @@ module.exports = {
   models: {
     connection: 'testLocal',
     migrate: 'drop'
-  },
-
-  emailServer: 'http://localhost:3000'
+  }
 
 };

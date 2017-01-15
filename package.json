@@ -23,6 +23,7 @@
     "include-all": "^1.0.0",
     "lodash": "^4.16.4",
     "mongo-round": "^1.0.0",
+    "nodemailer": "^2.7.0",
     "rc": "1.0.1",
     "request": "^2.79.0",
     "sails": "~0.12.8",
