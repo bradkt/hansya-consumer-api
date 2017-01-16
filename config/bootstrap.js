@@ -16,7 +16,7 @@ var userController = require('../api/controllers/UserController')
 module.exports.bootstrap = function (done) {
 
   // Don't populate fake data when running in production
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'testing') {
     return done();
   }
 
