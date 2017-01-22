@@ -22,6 +22,9 @@ _.merge(exports, {
         company: {
             model: 'company',
             required: false,
+        },
+        username: {
+            required: true
         }
     },
 
@@ -31,11 +34,23 @@ _.merge(exports, {
         role = await(Role.findOne({ name: 'registered' }))
         _user.role = role.id
         await(_user.save())
-        ////////////////////////////////////////////////////////
-        //send email to user
-        if (sails.environment === 'production' || sails.environment == 'testing'){
-            await(EmailService.sendEmail('hansyaTest@gmail.com', _user.email, 'Thank You from Hansya', '<h1> Thank you for registering</h1>'))
-        }
+        await(EmailService.sendEmail('hansyaTest@gmail.com', _user.email, 'Thank You from Hansya', '<h1> Thank you for registering</h1>'))
         next();
-    })
+    }),
+
+    afterValidate: [
+        function updatePassword(values, next) {
+            // Update the passport password if it was passed in
+            if(values.password && this.user && this.user.id) {
+              Passport.update({user: this.user.id, protocol: 'local'}, {password: values.password})
+              .exec(function(err, passport) {
+                delete values.password;
+                next(err);
+              });
+            }
+            else {
+              next();
+            }
+        }
+],
 })

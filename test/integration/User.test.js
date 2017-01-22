@@ -10,6 +10,68 @@ describe('UserController', function () {
         await(User.destroy({ username: 'newuser' }))
         await(User.destroy({ username: 'othernewuser' }))
     }))
+    describe('forgotPassword', function () {
+        var request
+        before(async(function () {
+            request = require('supertest-as-promised').agent(sails.hooks.http.app);
+        }))
+        it('should assign a temporary code to the user and set the expiration date ', async(function () {
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            await(request.post('/user/forgotPassword').send({ email: user.email }))
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            return (expect(user.temporary_code).to.not.be.undefined &&
+                expect(user.temporary_code_exp).to.not.be.undefined)
+        }))
+    })
+    describe('resetPasswordLink', function () {
+        var request
+        before(async(function () {
+            request = require('supertest-as-promised').agent(sails.hooks.http.app);
+        }))
+        beforeEach(async(function () {
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            await(request.post('/user/forgotPassword').send({ email: user.email }))
+        }))
+        afterEach(async(function () {
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            passport = await(Passport.findOne({user: user.id}))
+            passport.password = 'registered1234'
+            await(passport.save())
+        }))
+        it('should return bad request if the email address and code do not match, and not update the password', async(function () { //this is so a user can't determine a valid email address
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            var passReset = await(request.post('/user/resetPasswordLink').send({ email: user.email, code: '42', password: 'newPassword1' }))
+            var res = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'registered1234' })))
+            var res2 = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'newPassword1' })))
+            return (expect(res.statusCode).to.equal(200) &&
+                expect(res2.statusCode).to.equal(403) &&
+                expect(passReset.statusCode).to.equal(400))
+        }))
+        it('should return bad request if the code has expired', async(function () {
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            user.temporary_code_exp = new Date(new Date().getTime() - (30 * 60 * 1000)) //expired 30 minutes ago
+            await(user.save())
+            var passReset = await(request.post('/user/resetPasswordLink').send({ email: user.email, code: user.temporary_code, password: 'newPassword1' }))
+            var res = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'registered1234' })))
+            var res2 = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'newPassword1' })))
+            return (expect(res.statusCode).to.equal(200) &&
+                expect(res2.statusCode).to.equal(403) &&
+                expect(passReset.statusCode).to.equal(400))
+        }))
+        it('should update the password if the correct email, code, and a new password are sent', async(function () {
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            var passReset = await(request.post('/user/resetPasswordLink').send({ email: user.email, code: user.temporary_code, password: 'newPassword1' }))
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            console.log(user)
+            var res = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'registered1234' })))
+            var res2 = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'newPassword1' })))
+            return (expect(passReset.statusCode).to.equal(200) &&
+                expect(res.statusCode).to.equal(403) &&
+                expect(res2.statusCode).to.equal(200) &&
+                expect(user.temporary_code).to.equal(null) &&
+                expect(user.temporary_code_exp).to.equal(null))
+        }))
+    })
     describe('registered', function () {
         var request
         before(async(function () {
@@ -23,7 +85,6 @@ describe('UserController', function () {
             it('should only return my user information', async(function () {
                 var user = await(User.findOne({ username: 'registered' }).populate('role'))
                 var response = await(request.get('/user'))
-                console.log(response.body.id)
                 return (expect(response.statusCode).to.equal(200) &&
                     expect(response.body.username).to.deep.equal(user.username) &&
                     expect(response.body.role.id).to.equal(user.role.id) &&

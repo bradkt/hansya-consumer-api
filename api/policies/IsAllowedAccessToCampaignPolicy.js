@@ -8,8 +8,8 @@ module.exports = async(function (req, res, next) {
     if (!req.user) {
         return res.forbidden();
     }
-    else if (await(UserService.role(req.user.id)) == 'registered') {
-        if (!await(CampaignService.hasAccessToCampaign(req.user.id, req.param('id')))) {
+    else if (await(UserService.role(req.session.passport.user)) == 'registered') {
+        if (!await(CampaignService.hasAccessToCampaign(req.session.passport.user, req.param('id')))) {
             return res.forbidden();
         }
     }

@@ -5,7 +5,7 @@ module.exports = async(function (req, res, next) {
 
     // User is allowed, proceed to the next policy, 
     // or if this is the last policy, the controller
-    if (await(UserService.hasRole(req.user.id, 'registered'))) {
+    if (await(UserService.hasRole(req.session.passport.user, 'registered'))) {
         if (req.allParams().keywords ||
             req.allParams().assignedUser ||
             req.allParams().requestedDate ||
@@ -16,7 +16,7 @@ module.exports = async(function (req, res, next) {
             return res.forbidden();
         }
     }
-    if (await(UserService.hasRole(req.user.id, 'associate'))) {
+    if (await(UserService.hasRole(req.session.passport.user, 'associate'))) {
         if (req.allParams().keywords ||
             req.allParams().requestedDate ||
             req.allParams().user ||
@@ -25,7 +25,7 @@ module.exports = async(function (req, res, next) {
         }
     }
 
-    if (await(UserService.hasRole(req.user.id, 'admin'))) {
+    if (await(UserService.hasRole(req.session.passport.user, 'admin'))) {
         if (req.allParams().keywords ||
             req.allParams().requestedDate ||
             req.allParams().user) {

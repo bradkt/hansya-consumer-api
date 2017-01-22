@@ -19,7 +19,7 @@ module.exports = {
 
   models: {
     connection: 'testDatabase',
-    migrate: 'safe'
+    migrate: 'drop'
   },
 
   session: {

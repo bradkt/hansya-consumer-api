@@ -3,11 +3,11 @@ var await = require('asyncawait/await')
 
 module.exports = async(function (req, res, next) {
 
-    if (await(UserService.hasRole(req.user.id, 'registered'))) {
+    if (await(UserService.hasRole(req.session.passport.user, 'registered'))) {
         if (typeof req.body.user === 'undefined') {
-            req.body.user = req.user.id
+            req.body.user = req.session.passport.user
         }
-        else if (req.body.user != req.user.id) {
+        else if (req.body.user != req.session.passport.user) {
             return res.badRequest()
         }
     }

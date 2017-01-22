@@ -19,14 +19,9 @@
 
 module.exports.policies = {
 
-  '*': [
-    'basicAuth',
-    'passport',
-    'sessionAuth'
-  ],
-
   AuthController: {
-    '*': ['passport']
+    '*': ['passport'],
+    'local': true,
   },
 
   CampaignController: {
@@ -55,7 +50,9 @@ module.exports.policies = {
     'all': ['passport', 'isAssociateOrAdminPolicy'],
     'update' : ['passport', 'isAdminPolicy'],
     'destroy' : ['passport', 'isAdminPolicy'],
-    'changeRole' : ['passport', 'isAdminPolicy']
+    'changeRole' : ['passport', 'isAdminPolicy'],
+    'find': ['passport'],
+    '*' : true
   },
 
 

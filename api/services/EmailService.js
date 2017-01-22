@@ -12,6 +12,8 @@ module.exports = {
             text: body,
             html: `<h1>${body}</h1>` //temp until we have templates in place
         }
-        return await(transporter.sendMail(mailOptions))
+        if (sails.config.environment === 'production' || sails.config.environment == 'testing') {
+            return await(transporter.sendMail(mailOptions))
+        }
     })
 }
