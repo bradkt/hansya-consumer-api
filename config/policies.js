@@ -40,6 +40,9 @@ module.exports.policies = {
     'destroy': ['passport', 'isAdminPolicy'],
     'update': ['passport', 'isAdminPolicy']
   },
+  PaymentController:{
+    'makePayment': ['passport','canMakePaymentPolicy']
+  },
   ProductController: {
     'create': ['passport', 'isAdminPolicy'],
     'destroy': ['passport', 'isAdminPolicy'],

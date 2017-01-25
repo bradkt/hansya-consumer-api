@@ -23,7 +23,8 @@ module.exports = {
       required: 'true'
     },
     price: {
-      type: 'integer'
+      type: 'integer',
+      required: true
     }
   }
 };

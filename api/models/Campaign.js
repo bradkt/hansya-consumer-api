@@ -44,7 +44,7 @@ module.exports = {
       type: 'boolean',
       required: true
     },
-    paymentID: { //this will be the authorize.net confirmation ID
+    paymentID: { //this will be the stripe confirmation ID
       type: 'string'
     }
     // company: {
