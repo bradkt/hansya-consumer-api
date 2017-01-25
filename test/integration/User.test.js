@@ -10,6 +10,22 @@ describe('UserController', function () {
         await(User.destroy({ username: 'newuser' }))
         await(User.destroy({ username: 'othernewuser' }))
     }))
+    describe('logout', function () {
+        before(async(function () {
+            request = require('supertest-as-promised').agent(sails.hooks.http.app);
+            return await(request
+                .post('/auth/local')
+                .send({ identifier: 'registered@example.com', password: 'registered1234' }))
+        }))
+        it('should log a user out', async(function () {
+            var user = await(User.findOne({ username: 'registered' }).populate('role'))
+            loggedIn = await(request.get('/user'))
+            await(request.get('/logout'))
+            loggedOut = await(request.get('/user'))
+            return (expect(loggedIn.body.id).to.equal(user.id) &&
+                    expect(loggedOut.statusCode).to.equal(403))
+        }))
+    })
     describe('forgotPassword', function () {
         var request
         before(async(function () {
@@ -34,7 +50,7 @@ describe('UserController', function () {
         }))
         afterEach(async(function () {
             var user = await(User.findOne({ username: 'registered' }).populate('role'))
-            passport = await(Passport.findOne({user: user.id}))
+            passport = await(Passport.findOne({ user: user.id }))
             passport.password = 'registered1234'
             await(passport.save())
         }))
@@ -62,7 +78,6 @@ describe('UserController', function () {
             var user = await(User.findOne({ username: 'registered' }).populate('role'))
             var passReset = await(request.post('/user/resetPasswordLink').send({ email: user.email, code: user.temporary_code, password: 'newPassword1' }))
             var user = await(User.findOne({ username: 'registered' }).populate('role'))
-            console.log(user)
             var res = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'registered1234' })))
             var res2 = (await(request.post('/auth/local').send({ identifier: 'registered@example.com', password: 'newPassword1' })))
             return (expect(passReset.statusCode).to.equal(200) &&
