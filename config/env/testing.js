@@ -17,6 +17,14 @@ module.exports = {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
 
+  cors: {
+    allRoutes: true,
+    origin: '*',
+    credentials: true,
+    methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+    headers: 'content-type'
+  },
+
   models: {
     connection: 'testDatabase',
     migrate: 'drop'
