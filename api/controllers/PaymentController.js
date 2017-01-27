@@ -34,7 +34,7 @@ module.exports = {
                     status: 'error',
                     message: paymentResponse.message
                 }
-                console.log("RESPONSE")
+                ("RESPONSE")
                 res.badRequest(response)
             }
         }

@@ -136,7 +136,6 @@ describe('PaymentController', function () {
             var res = await(request.post('/payment/makePayment')
                 .send({ campaignID: 1, token: oneUseToken }))
             var campaign = await(Campaign.findOne({ id: 1 }))
-            console.log(res.body)
             return (expect(res.statusCode).to.equal(400) &&
                 expect(res.body).to.deep.equal({
                     status: 'error',
