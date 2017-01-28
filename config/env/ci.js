@@ -18,7 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'ciDatabase',
+    connection: 'testLocal',
     migrate: 'drop'
   }
 };
