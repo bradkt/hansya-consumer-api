@@ -20,6 +20,8 @@ module.exports = {
   models: {
     connection: 'testLocal',
     migrate: 'drop'
-  }
+  },
+
+  dashboard: "http://localhost:1337"
 
 };

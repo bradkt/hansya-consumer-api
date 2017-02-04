@@ -32,5 +32,7 @@ module.exports = {
 
   session: {
     connection: 'testRedis'
-  }
+  },
+
+  dashboard: "https://bucketeer-d89c87a6-7073-4603-bd65-7bdd75831a5b.s3.amazonaws.com/public"
 };

@@ -10,8 +10,9 @@ module.exports = {
             to: toAddress,
             subject: subject,
             text: body,
-            html: `<h1>${body}</h1>` //temp until we have templates in place
+            html: body //temp until we have templates in place
         }
+        console.log(body)
         if (sails.config.environment === 'production' || sails.config.environment == 'testing') {
             return await(transporter.sendMail(mailOptions))
         }

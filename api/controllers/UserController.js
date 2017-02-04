@@ -56,7 +56,7 @@ _.merge(exports, {
       user.temporary_code = temp_code
       user.temporary_code_exp = code_exp
       await(user.save())
-      await(EmailService.sendEmail('hansyaTest@gmail.com', _user.email, 'Forgot Password Link', `<h1> Forgot Password </h1><h3> <a href="http://localhost:1337/user/resetPasswordLink/${temp_code}">Click Here to reset your password</a></h3> <p>Your unlock code will be valid for 30 minutes.</p>`))
+      await(EmailService.sendEmail('hansyaTest@gmail.com', _user.email, 'Forgot Password Link', `<h1> Forgot Password </h1><h3> <a href="${sails.config.dashboard}/reset/${temp_code}">Click Here to reset your password</a></h3> <p>Your unlock code will be valid for 30 minutes.</p>`))
       res.ok();
     }
   }),
