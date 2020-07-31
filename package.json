@@ -53,6 +53,6 @@
     "sails-swagger": "^0.5.1",
     "supertest": "^2.0.1",
     "supertest-as-promised": "^4.0.2",
-    "swagger-ui": "^2.2.6"
+    "swagger-ui": "^3.31.1"
   }
 }
